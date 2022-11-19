@@ -31,12 +31,18 @@
             android:value="AIzaSyCNBbXID7cQYNIanDcdXTdJWipNhXkZMac" />
 
         <activity
-            android:name=".MapsActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps" />
+            android:name=".MainActivity"
+            android:exported="false" />
         <activity
-            android:name=".SplashActivity"
-            android:exported="true" >
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SplashScreen"
+            android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
