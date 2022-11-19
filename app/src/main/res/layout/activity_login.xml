@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/LogoLogin"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logogatherup" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/fields_bg"
+        android:hint="@string/username"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textIsSelectable="false" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="25dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/fields_bg"
+        android:hint="@string/password" />
+
+    <Button
+        android:id="@+id/LoginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/buttons_bg"
+        android:onClick="Login"
+        android:text="Login"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="170dp"
+        android:background="@color/DarkBlue" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="Register"
+        android:text="@string/register_text_login_page"
+        android:textAlignment="center"
+        android:textColor="@color/MiddleBlue"
+        android:textSize="24sp"
+        app:autoSizeTextType="uniform"
+        tools:ignore="TouchTargetSizeCheck" />
+
+</LinearLayout>
