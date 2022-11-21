@@ -11,7 +11,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="register_text_login_page">Not register yet? Register Now!</string>
     <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="email">Email</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
 </resources>
