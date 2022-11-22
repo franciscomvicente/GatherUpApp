@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     MapsFragment mapsFragment = new MapsFragment();
     EditPerfilFragment teste = new EditPerfilFragment();
+    MyProfileFragment myprofile = new MyProfileFragment();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, teste).commit();
                 return true;
             case R.id.friends:
-                //getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, thirdFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, myprofile).commit();
                 return true;
             case R.id.perfil:
                 //getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, thirdFragment).commit();

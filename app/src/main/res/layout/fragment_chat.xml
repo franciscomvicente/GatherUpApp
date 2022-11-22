@@ -67,6 +67,7 @@
 
         <Button
             android:id="@+id/LoginButton"
+            android:layout_width="350dp"
             style="@style/ButtonsFino"
             android:background="@drawable/buttons_bg"
             android:onClick="SendMessage"

@@ -33,7 +33,6 @@
 
     <style name="ButtonsFino" parent="Buttons">
         <item name="android:layout_height">35dp</item>
-        <item name="android:layout_width">350dp</item>
     </style>
 
 
@@ -41,11 +40,6 @@
         <item name="backgroundTint">@color/SoftBlue</item>
         <item name="android:textColor">@color/Grey</item>
         <item name="textAllCaps">false</item>
-    </style>
-
-    <style name="ButtonsFino" parent="Buttons">
-        <item name="android:layout_height">35dp</item>
-        <item name="android:layout_width">380dp</item>
     </style>
 
 </resources>
