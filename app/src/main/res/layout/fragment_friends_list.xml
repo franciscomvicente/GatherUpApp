@@ -26,9 +26,9 @@
 
         <TextView
             android:id="@+id/FLRemoveFriend"
-            android:layout_width="106dp"
+            android:layout_width="115dp"
             android:layout_height="0dp"
-            android:text="Remover Amigo"
+            android:text="Encontre Amigos"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,8 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="640sp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/FLview"
             app:layout_constraintVertical_bias="1.0"
