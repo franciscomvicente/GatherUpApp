@@ -31,6 +31,12 @@
         <item name="autoSizeTextType">uniform</item>
     </style>
 
+    <style name="ButtonsFino" parent="Buttons">
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_width">350dp</item>
+    </style>
+
+
     <style name="Inputs">
         <item name="backgroundTint">@color/SoftBlue</item>
         <item name="android:textColor">@color/Grey</item>
