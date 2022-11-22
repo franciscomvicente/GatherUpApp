@@ -33,7 +33,7 @@
         <View
             android:id="@+id/divider1"
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="1dp"
             android:layout_marginTop="212dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +45,7 @@
             android:id="@+id/EPtxtSobreTi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sobre ti:"
-            android:textSize="20dp"
+            android:text="About you:"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,10 +55,9 @@
             android:id="@+id/EPtxtNome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35sp"
-            android:layout_marginStart="20sp"
-            android:text="Nome: "
-            android:textSize="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:text="Name: "
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtSobreTi" />
 
@@ -68,8 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35sp"
-            android:text="Idade: "
-            android:textSize="20dp"
+            android:text="Age: "
             app:layout_constraintStart_toStartOf="@+id/EPtxtNome"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtNome" />
 
@@ -78,8 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="35sp"
-            android:text="Preferências:"
-            android:textSize="20dp"
+            android:text="Preferences:"
             app:layout_constraintStart_toStartOf="@+id/EPtxtIdade"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtIdade" />
 
@@ -87,9 +83,8 @@
             android:id="@+id/EPtxtAddPreferencias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:text="Adicionar preferências:"
-            android:textSize="20dp"
+            android:layout_marginTop="35dp"
+            android:text="Add Preferences"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/EPtxtPreferencias"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtPreferencias" />
@@ -98,17 +93,16 @@
             android:id="@+id/EPtxtAddDescricao"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35sp"
-            android:text="Descrição: "
-            android:textSize="20dp"
+            android:layout_marginTop="35dp"
+            android:text="Description: "
             app:layout_constraintStart_toStartOf="@+id/EPtxtAddPreferencias"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtAddPreferencias" />
 
         <View
             android:id="@+id/divider2"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:layout_width="match_parent"
-            android:layout_height="6dp"
+            android:layout_height="1dp"
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -116,11 +110,10 @@
 
         <TextView
             android:id="@+id/EPtxtPrivacidade"
-            android:textSize="20dp"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Privacidade:"
+            android:text="Privacy:"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2" />
@@ -129,10 +122,9 @@
             android:id="@+id/EPtxtEstado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado: "
+            android:text="State: "
             android:layout_marginStart="20sp"
-            android:textSize="20dp"
-            android:layout_marginTop="35sp"
+            android:layout_marginTop="25dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtPrivacidade" />
 
@@ -140,12 +132,106 @@
             android:id="@+id/EPtxtAlterarFoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Alterar foto:"
+            android:text="Change Photo:"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toTopOf="@+id/divider1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+        <EditText
+            android:id="@+id/editText3"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtNome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtNome"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtNome" />
+
+        <EditText
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtIdade"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtIdade"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtIdade" />
+
+        <EditText
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtPreferencias"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtPreferencias"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtPreferencias"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <EditText
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtAddPreferencias"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtAddPreferencias"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtAddPreferencias" />
+
+        <EditText
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtAddDescricao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtAddDescricao"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtAddDescricao" />
+
+        <EditText
+            android:id="@+id/editText4"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/EPtxtEstado"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EPtxtEstado"
+            app:layout_constraintTop_toTopOf="@+id/EPtxtEstado" />
+
+        <Button
+            android:id="@+id/LoginButton"
+            style="@style/ButtonsFino"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/buttons_bg"
+            android:onClick="SendMessage"
+            android:text="@string/Save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText4" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
