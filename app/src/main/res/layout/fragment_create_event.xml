@@ -281,12 +281,12 @@
             android:layout_marginStart="10dp"/>
 
         <Button
-            android:id="@+id/LoginButton"
+            android:id="@+id/CreateEvent"
             style="@style/ButtonsFino"
             android:layout_width="150dp"
             android:background="@drawable/buttons_bg"
-            android:onClick="SendMessage"
-            android:text="@string/EditProfile"
+            android:onClick="CreateEvent"
+            android:text="@string/CreateEvent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
