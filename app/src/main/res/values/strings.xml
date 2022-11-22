@@ -17,5 +17,7 @@
     <string name="SendMessage">Send Message</string>
     <string name="Save">Save</string>
     <string name="EditProfile">Editar Perfil</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
