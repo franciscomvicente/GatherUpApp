@@ -30,9 +30,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     MapsFragment mapsFragment = new MapsFragment();
-    CreateEventFragment createeventFragment = new CreateEventFragment();
-    FriendsListFragment friendslistFragment = new FriendsListFragment();
-    MyProfileFragment myprofileFragment = new MyProfileFragment();
+    CreateEventFragment createEventFragment = new CreateEventFragment();
+    FriendsListFragment friendsListFragment = new FriendsListFragment();
+    MyProfileFragment myProfileFragment = new MyProfileFragment();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -41,13 +41,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, mapsFragment).commit();
                 return true;
             case R.id.new_event:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, createeventFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, createEventFragment).commit();
                 return true;
             case R.id.friends:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, friendslistFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, friendsListFragment).commit();
                 return true;
             case R.id.perfil:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, myprofileFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, myProfileFragment).commit();
                 return true;
         }
         return false;
