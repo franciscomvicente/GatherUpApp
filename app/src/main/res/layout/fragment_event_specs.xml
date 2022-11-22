@@ -10,19 +10,6 @@
         android:layout_height="match_parent"
         >
 
-    <androidx.cardview.widget.CardView
-
-        android:id="@+id/EventPhoto"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="300dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:cardCornerRadius="250dp"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </androidx.cardview.widget.CardView>
-
         <TextView
             android:id="@+id/txtEventTitle"
             android:layout_width="wrap_content"
@@ -72,24 +59,14 @@
 
         <TextView
             android:id="@+id/txtHost"
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="20dp"
             android:text="Host"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@+id/txtEventSettings"
-            tools:layout_editor_absoluteX="42dp" />
-
-        <androidx.cardview.widget.CardView
-        android:id="@+id/HostPhoto"
-        android:layout_marginTop="290dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEventSettings" />
 
         <TextView
             android:id="@+id/txtUsername"
@@ -144,24 +121,13 @@
 
         <TextView
             android:id="@+id/txtDuration"
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:text="Duration:"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="@+id/txtDate"
             app:layout_constraintTop_toBottomOf="@+id/txtDate" />
-
-        <androidx.cardview.widget.CardView
-        android:id="@+id/GroupChatPhoto"
-        android:layout_marginTop="580dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
-
-        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/txtGroupChat"
@@ -176,9 +142,9 @@
 
         <ImageView
             android:id="@+id/imageView2"
+            android:layout_width="106dp"
+            android:layout_height="111dp"
             android:layout_marginTop="10dp"
-            android:layout_width="135dp"
-            android:layout_height="130dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -198,10 +164,12 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_marginTop="20dp"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/txtDuration"
             app:layout_constraintTop_toBottomOf="@+id/txtDuration"
             app:srcCompat="@drawable/ic_baseline_3p_24" />

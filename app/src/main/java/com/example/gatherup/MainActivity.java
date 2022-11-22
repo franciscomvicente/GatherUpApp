@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Fragment fragment = new MapsActivity();
+        Fragment fragment = new MapsFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, fragment).commit();
     }
 }
