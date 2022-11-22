@@ -75,22 +75,15 @@
             app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:id="@+id/myRectangleView"
-            android:layout_width="350dp"
-            android:layout_height="400dp"
-            android:background="@drawable/fields_bg"
-            app:layout_constraintBottom_toTopOf="@+id/LoginButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        
 
         <ListView
             android:layout_width="340dp"
             android:layout_height="390dp"
             app:layout_constraintBottom_toTopOf="@+id/LoginButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"></ListView>
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/fields_bg"></ListView>
 
 
 
