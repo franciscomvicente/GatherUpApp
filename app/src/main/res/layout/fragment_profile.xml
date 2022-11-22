@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
-    tools:context=".PerfilActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,23 +45,35 @@
         <ListView
             android:id="@+id/listaEventos"
             android:layout_width="match_parent"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="270dp"
             android:layout_height="0dp"
             android:layout_marginTop="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtDescricao" />
+            app:layout_constraintTop_toBottomOf="@+id/txtDescricao"
+            android:background="@drawable/fields_bg"/>
+
 
         <TextView
             android:id="@+id/txtDescricao"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
+            android:text="Description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtUsername"
             tools:ignore="UnknownId" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/DarkBlue"
+            app:layout_constraintBottom_toTopOf="@+id/listaEventos"
+            android:layout_marginBottom="10dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
