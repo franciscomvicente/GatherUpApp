@@ -16,10 +16,10 @@
         <androidx.cardview.widget.CardView
 
             android:id="@+id/cardView"
-            android:layout_marginTop="30dp"
             android:layout_width="wrap_content"
             android:layout_height="130dp"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
             app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,21 +28,21 @@
             <ImageView
                 android:layout_width="135dp"
                 android:layout_height="135dp"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
         </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/txtUsername"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:text="username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
         <Button
-            android:id="@+id/LoginButton"
+            android:id="@+id/EditProfileButton"
             style="@style/ButtonsFino"
             android:layout_width="150dp"
             android:layout_marginTop="16dp"
@@ -57,24 +57,25 @@
             android:id="@+id/listaEventos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="240dp"
+            android:background="@drawable/fields_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LoginButton"
-            android:background="@drawable/fields_bg"/>
+            app:layout_constraintTop_toBottomOf="@+id/EditProfileButton"
+            android:layout_marginTop="10dp"/>
+
         <ListView
             android:id="@+id/meusEventos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="200dp"
             android:layout_marginBottom="50dp"
+            android:background="@drawable/fields_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/LoginButton"
-            android:background="@drawable/fields_bg"/>
+            app:layout_constraintTop_toBottomOf="@+id/listaEventos"
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:id="@+id/txtDescricao"
@@ -86,8 +87,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtUsername"
             tools:ignore="UnknownId" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
