@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendsListFragment">
+    tools:context=".FriendsListFragment"
+    android:id="@+id/fragmentFriendsList">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -38,11 +39,22 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/EPAddFriends"
             app:layout_constraintTop_toBottomOf="@+id/FLview"
             app:layout_constraintVertical_bias="1.0"
-            />
+            android:layout_marginBottom="18sp"/>
 
+        <Button
+            android:id="@+id/EPAddFriends"
+            style="@style/ButtonsFino"
+            android:layout_width="300dp"
+            android:background="@drawable/buttons_bg"
+            android:onClick="AddFriends"
+            android:layout_marginBottom="18dp"
+            android:text="Add Friends"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
