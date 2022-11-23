@@ -38,16 +38,16 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, mapsFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, mapsFragment).commit();
                 return true;
             case R.id.new_event:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, createEventFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).commit();
                 return true;
             case R.id.friends:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, friendsListFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, friendsListFragment).commit();
                 return true;
             case R.id.perfil:
-                getSupportFragmentManager().beginTransaction().replace(R.id.Fragment, myProfileFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, myProfileFragment).commit();
                 return true;
         }
         return false;

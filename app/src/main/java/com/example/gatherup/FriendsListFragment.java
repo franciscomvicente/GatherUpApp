@@ -9,29 +9,29 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.gatherup.databinding.FragmentAddFriendsBinding;
 
 public class FriendsListFragment extends Fragment {
 
-    public FriendsListFragment() {
-        // Required empty public constructor
-    }
+    private Button addFriendButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_friends_list, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_friends_list, container, false);
+        addFriendButton = view.findViewById(R.id.EPAddFriends);
 
-    public void AddFriends(View view) {
-        AddFriendsFragment addFriendsFragment = new AddFriendsFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentFriendsList, addFriendsFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        addFriendButton.setOnClickListener(view1 -> {
+            Fragment addFriendsFragment = new AddFriendsFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainFragment, addFriendsFragment).commit();
+        });
+
+
+        return view;
     }
 
 

@@ -281,7 +281,7 @@
             android:layout_marginStart="10dp"/>
 
         <Button
-            android:id="@+id/CreateEvent"
+            android:id="@+id/CECreateEvent"
             style="@style/ButtonsFino"
             android:layout_width="150dp"
             android:background="@drawable/buttons_bg"
