@@ -40,12 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PerformLogin();
-            }
-        });
+        btnLogin.setOnClickListener(v -> PerformLogin());
     }
 
     private void PerformLogin() {
