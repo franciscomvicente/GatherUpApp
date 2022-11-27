@@ -20,7 +20,8 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:text="Lista de Eventos"
+        android:text="Events List
+"
         android:textAlignment="center"
         android:gravity="center"/>
 </FrameLayout>
