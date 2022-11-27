@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.GatherUp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.GatherUp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/MiddleBlue</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -22,5 +22,24 @@
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="colorPrimary">@color/DarkBlue</item>
     </style>
+
+    <style name="Buttons">
+        <item name="backgroundTint">@color/MiddleBlue</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAlignment">center</item>
+        <item name="autoSizeTextType">uniform</item>
+    </style>
+
+    <style name="ButtonsFino" parent="Buttons">
+        <item name="android:layout_height">35dp</item>
+    </style>
+
+    <style name="Inputs">
+        <item name="backgroundTint">@color/SoftBlue</item>
+        <item name="android:textColor">@color/Grey</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
 
 </resources>
