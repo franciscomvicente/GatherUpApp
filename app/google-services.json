@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "908981390508",
+    "project_id": "gatherup-305c7",
+    "storage_bucket": "gatherup-305c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:908981390508:android:1dd097223fb249e1d0a309",
+        "android_client_info": {
+          "package_name": "com.example.gatherup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "908981390508-vnm318duc3j8c77ek1jak68hpsir1olf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaycFzRQ-zZUG3iOygGZj1-lXYOL9WbCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "908981390508-vnm318duc3j8c77ek1jak68hpsir1olf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

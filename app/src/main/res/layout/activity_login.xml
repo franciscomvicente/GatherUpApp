@@ -40,7 +40,12 @@
         android:hint="@string/password" />
 
     <Button
+<<<<<<< Updated upstream
         android:id="@+id/LoginButton"
+=======
+        android:id="@+id/btnLogin"
+        style="@style/Buttons"
+>>>>>>> Stashed changes
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
