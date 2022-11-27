@@ -25,7 +25,8 @@
         android:layout_marginTop="100dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/fields_bg"
-        android:hint="@string/email"
+        android:hint="@string/prompt_email"
+        style="@style/Inputs"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"/>
 
@@ -38,6 +39,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:background="@drawable/fields_bg"
+        style="@style/Inputs"
         android:hint="@string/username" />
 
     <EditText
@@ -49,7 +51,8 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:background="@drawable/fields_bg"
-        android:hint="@string/password" />
+        style="@style/Inputs"
+        android:hint="@string/prompt_password" />
 
     <EditText
         android:id="@+id/inputConfirmPassword"
@@ -60,6 +63,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:background="@drawable/fields_bg"
+        style="@style/Inputs"
         android:hint="@string/confirm_password" />
 
     <Button
@@ -69,15 +73,11 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginBottom="25dp"
         android:background="@drawable/buttons_bg"
-<<<<<<< Updated upstream
-        android:onClick="AccountCreated"
         android:text="Register"
         android:textAlignment="center"
         android:textAllCaps="false"
         app:autoSizeTextType="uniform" />
-=======
         style="@style/Buttons"
         android:text="@string/register" />
->>>>>>> Stashed changes
 
 </LinearLayout>
