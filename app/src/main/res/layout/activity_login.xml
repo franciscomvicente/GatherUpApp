@@ -27,7 +27,7 @@
         android:layout_marginTop="120dp"
         android:layout_marginEnd="30dp"
         android:background="@drawable/fields_bg"
-        android:hint="@string/username"
+        android:hint="@string/email"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
