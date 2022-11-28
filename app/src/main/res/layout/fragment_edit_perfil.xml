@@ -25,6 +25,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/inputProfilePhoto"
                 android:layout_width="115dp"
                 android:layout_height="115dp"
                 android:scaleType="centerCrop" />

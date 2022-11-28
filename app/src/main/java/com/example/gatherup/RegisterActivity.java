@@ -3,9 +3,11 @@ package com.example.gatherup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,21 +15,29 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText inputEmail, inputPassword, inputConfirmPassword;
+    EditText inputEmail,inputUsername, inputPassword, inputConfirmPassword;
     Button btnRegister;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"; //VERIFICAR
     ProgressDialog progressDialog;
 
     FirebaseAuth auth;
-    FirebaseUser user;
+    FirebaseUser user; //VERIFICAR
+    FirebaseFirestore store;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +45,15 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         inputEmail = findViewById(R.id.inputEmail);
+        inputUsername = findViewById(R.id.inputUsername);
         inputPassword = findViewById(R.id.inputPassword);
         inputConfirmPassword = findViewById(R.id.inputConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);
-        progressDialog= new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
+
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        store = FirebaseFirestore.getInstance();
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,9 +64,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void PerformAuth(){
-        String email = inputEmail.getText().toString();
-        String password = inputPassword.getText().toString();
-        String confirmpassword = inputConfirmPassword.getText().toString();
+        String email = inputEmail.getText().toString().trim();
+        String username = inputUsername.getText().toString();
+        String password = inputPassword.getText().toString().trim();
+        String confirmpassword = inputConfirmPassword.getText().toString().trim();
 
         if (!email.matches(emailPattern)) {
             inputEmail.setError("Invalid Email");
@@ -73,6 +87,19 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()){
                         progressDialog.dismiss();
+
+                        userID = user.getUid();
+                        DocumentReference documentReference = store.collection("Users").document(userID);
+                        Map<String,Object> user = new HashMap<>();
+                        user.put("Username", username);
+                        user.put("Email", email);
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("TAG", "onSuccess:" + userID +"profile created");
+                            }
+                        });
+
                         AccountCreated();
                         Toast.makeText(RegisterActivity.this, "Registration Completed", Toast.LENGTH_SHORT).show();
                     }else{
