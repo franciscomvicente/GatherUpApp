@@ -13,6 +13,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <Button
+            android:id="@+id/btnLogout"
+            style="@style/ButtonsFino"
+            android:layout_width="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/buttons_bg"
+            android:text="Logout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.cardview.widget.CardView
 
             android:id="@+id/cardView"
@@ -43,7 +54,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
         <Button
-            android:id="@+id/EditProfileButton"
+            android:id="@+id/btnEditProfile"
             style="@style/ButtonsFino"
             android:layout_width="150dp"
             android:layout_marginTop="16dp"
@@ -56,27 +67,31 @@
 
         <ListView
             android:id="@+id/listaEventos"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="240dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/fields_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/meusEventos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EditProfileButton"
-            android:layout_marginTop="10dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/btnEditProfile" />
 
         <ListView
             android:id="@+id/meusEventos"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/fields_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/listaEventos"
-            android:layout_marginTop="10dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/listaEventos" />
 
         <TextView
             android:id="@+id/outputDescription"

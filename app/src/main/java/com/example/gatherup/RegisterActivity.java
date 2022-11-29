@@ -1,6 +1,7 @@
 package com.example.gatherup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -20,8 +21,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
 
     FirebaseAuth auth;
-    FirebaseUser user; //VERIFICAR
+    FirebaseUser user;
     FirebaseFirestore store;
     String userID;
 
@@ -54,6 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         store = FirebaseFirestore.getInstance();
+
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
             inputPassword.setError("Invalid Password");
         }else if(!password.equals(confirmpassword)) {
             inputConfirmPassword.setError("Password not match");
+        }else if(checkIfUsernameExists(username)){                     //NAO ACABADO
+            inputUsername.setError("Username already exists");
         }else {
             progressDialog.setMessage("Please Wait...");
             progressDialog.setTitle("Registration");
@@ -115,5 +124,18 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    private boolean checkIfUsernameExists(String username) {                        //NAO ACABADO
+        final boolean[] validate = new boolean[1];
+        Query userQuery = store.collection("Users").whereEqualTo("Username", username);
+        userQuery.addSnapshotListener((value, error) -> {
+            if(value == null){
+                validate[0] = false;
+            }else{
+                validate[0] = true;
+            }
+        });
+        return validate[0];
     }
 }

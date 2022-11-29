@@ -1,5 +1,9 @@
 package com.example.gatherup;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -30,7 +34,7 @@ public class MyProfileFragment extends Fragment {
 
     ImageView outputProfilePhoto;
     TextView outputUsername, outputDescription;
-    Button editProfileButton;
+    Button btnEditProfile, btnLogout;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -39,16 +43,15 @@ public class MyProfileFragment extends Fragment {
 
     StorageReference storageReference;
 
-    public MyProfileFragment() {
-        // Required empty public constructor
-    }
+    public static final String SHARED_PREFS = "sharedPrefs";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
-        editProfileButton = view.findViewById(R.id.EditProfileButton);
+        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        btnLogout = view.findViewById(R.id.btnLogout);
         outputUsername = view.findViewById(R.id.outputUsername);
         outputDescription = view.findViewById(R.id.outputDescription);
         outputProfilePhoto = view.findViewById(R.id.outputProfilePhoto);
@@ -76,13 +79,25 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
-        editProfileButton.setOnClickListener(view1 -> {
-            Fragment editPerfilFragment = new EditPerfilFragment();
+        btnLogout.setOnClickListener(v -> PerformLogout());
+
+        btnEditProfile.setOnClickListener(view1 -> {
+            Fragment editProfileFragment = new EditPerfilFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, editPerfilFragment).commit();
+            ft.replace(R.id.MainFragment, editProfileFragment).commit();
         });
 
         return view;
+    }
+
+    private void PerformLogout() {
+        SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", "false");
+        editor.apply();
+
+        Intent intent = new Intent(getContext(),LoginActivity.class);
+        startActivity(intent);
     }
 
 }
