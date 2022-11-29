@@ -87,16 +87,15 @@
         android:layout_height="1dp"
         android:layout_marginBottom="16dp"
         android:background="@color/DarkBlue"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/btnRegisterPage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/btnRegisterPage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
-        android:onClick="Register"
         android:text="@string/register_text_login_page"
         android:textAlignment="center"
         android:textColor="@color/MiddleBlue"

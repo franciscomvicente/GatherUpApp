@@ -7,10 +7,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText inputEmail, inputPassword;
     Button btnLogin;
+    TextView btnRegisterPage;
     CheckBox checkRememberMe;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"; //VERIFICAR
@@ -32,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseUser user;
     public static final String SHARED_PREFS = "sharedPrefs";
 
+    long btnLoginTime, btnRegisterTime = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,13 +44,30 @@ public class LoginActivity extends AppCompatActivity {
 
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
+        btnRegisterPage = findViewById(R.id.btnRegisterPage);
         btnLogin = findViewById(R.id.btnLogin);
         checkRememberMe = findViewById(R.id.checkRememberMe);
         progressDialog = new ProgressDialog(this);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        btnLogin.setOnClickListener(v -> PerformLogin());
+        btnLogin.setOnClickListener(v -> {
+            //PREVENT DOUBLE CLICK
+            if (SystemClock.elapsedRealtime() - btnLoginTime < 1000){
+                return;
+            }
+            btnLoginTime = SystemClock.elapsedRealtime();
+            PerformLogin();
+        });
+
+        btnRegisterPage.setOnClickListener(v -> {
+            //PREVENT DOUBLE CLICK
+            if (SystemClock.elapsedRealtime() - btnRegisterTime < 1000){
+                return;
+            }
+            btnRegisterTime = SystemClock.elapsedRealtime();
+            RegisterPage();
+        });
 
         checkLogged();
     }
@@ -90,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void Register(View view) {
+    private void RegisterPage() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
