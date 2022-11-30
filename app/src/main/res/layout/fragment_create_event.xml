@@ -216,8 +216,8 @@
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toTopOf="@+id/textView5" />
 
-        <EditText
-            android:id="@+id/editText7"
+        <Button
+            android:id="@+id/CEButtonDate"
             style="@style/Inputs"
             android:layout_width="0dp"
             android:layout_height="30dp"
