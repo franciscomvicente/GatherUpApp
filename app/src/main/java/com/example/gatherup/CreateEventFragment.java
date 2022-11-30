@@ -78,7 +78,7 @@ public class CreateEventFragment extends Fragment {
 
         int style = AlertDialog.THEME_HOLO_LIGHT;
 
-        datePickerDialog = new DatePickerDialog(getActivity(), style, dateSetListener, day, month, year);
+        datePickerDialog = new DatePickerDialog(getActivity(), style, dateSetListener, year, month, day);
     }
 
     private String makeDateString(int day, int month, int year){
