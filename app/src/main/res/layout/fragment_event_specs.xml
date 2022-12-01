@@ -11,7 +11,7 @@
         >
 
         <TextView
-            android:id="@+id/txtEventTitle"
+            android:id="@+id/txtCreateEvent_EventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -32,10 +32,10 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtEventTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_EventTitle" />
 
         <TextView
-            android:id="@+id/txtEventSettings"
+            android:id="@+id/txtCreateEvent_EventSettings"
             android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
             android:text="Host"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtEventSettings" />
+            app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_EventSettings" />
 
         <TextView
             android:id="@+id/txtUsername"
@@ -80,7 +80,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txtHost" />
 
         <TextView
-            android:id="@+id/txtTheme"
+            android:id="@+id/txtCreateEvent_Theme"
             android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -96,8 +96,8 @@
             android:layout_height="wrap_content"
             android:text="Description:"
             android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="@+id/txtTheme"
-            app:layout_constraintTop_toBottomOf="@+id/txtTheme" />
+            app:layout_constraintStart_toStartOf="@+id/txtCreateEvent_Theme"
+            app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_Theme" />
 
         <TextView
             android:id="@+id/txtCapacity"
@@ -120,7 +120,7 @@
             app:layout_constraintTop_toBottomOf="@+id/txtCapacity" />
 
         <TextView
-            android:id="@+id/txtDuration"
+            android:id="@+id/txtCreateEvent_Duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -170,8 +170,8 @@
             android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/txtDuration"
-            app:layout_constraintTop_toBottomOf="@+id/txtDuration"
+            app:layout_constraintStart_toStartOf="@+id/txtCreateEvent_Duration"
+            app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_Duration"
             app:srcCompat="@drawable/ic_baseline_3p_24" />
 
         <Button

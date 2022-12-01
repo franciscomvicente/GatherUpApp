@@ -93,6 +93,7 @@ public class EditPerfilFragment extends Fragment {
         StorageReference profileReference = storageReference.child("Users/"+ userID + "/profile.jpg");
         profileReference.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(inputProfilePhoto));
 
+
         btnSaveProfile.setOnClickListener(view1 -> {
             PerformSave();
 
@@ -115,12 +116,13 @@ public class EditPerfilFragment extends Fragment {
         inputDatePicker.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog_MinWidth,(view12, year1, month1, dayOfMonth) -> {
                 month1 = month1 +1;
-                String date = day+"/"+ month1 +"/"+ year1;
+                String date = dayOfMonth +"/"+ month1 +"/"+ year1;
                 inputDatePicker.setText(date);
             }, year, month, day);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             datePickerDialog.show();
         });
+
 
 
 

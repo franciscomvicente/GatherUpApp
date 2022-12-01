@@ -226,12 +226,12 @@
             android:id="@+id/inputPrivate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:thumbTint="@drawable/thump"
             android:trackTint="@drawable/track"
+            android:switchMinWidth="65dp"
+            android:layout_marginStart="8dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtPrivate"
-            app:layout_constraintStart_toEndOf="@+id/txtPrivate"
-            android:switchMinWidth="65dp"/>
+            app:layout_constraintStart_toEndOf="@+id/txtPrivate" />
 
         <Button
             android:id="@+id/btnSaveProfile"
