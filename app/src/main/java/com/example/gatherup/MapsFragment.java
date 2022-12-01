@@ -1,7 +1,5 @@
 package com.example.gatherup;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -12,35 +10,24 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.gatherup.utils.ClusterManagerRenderer;
+import com.example.gatherup.utils.ClusterMarker;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.maps.android.clustering.Cluster;
-import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-
-import android.location.LocationListener;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 
@@ -63,37 +50,39 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
-            }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10L, 100F, (LocationListener) getActivity());
-
-            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-
-            // Add a marker in Sydney and move the camera
-            DisplayLoc(location);
+            requestlocation();
+            //LatLng sydney = new LatLng(38.756829, -9.155290);
+            requestlocation();
         }
     };
 
     @SuppressLint("MissingPermission") //NAO VERIFICA PERMISSOES, TIRAR DEPOIS
     public void requestlocation(){
         checkLocationPermission();
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
+
+        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        DisplayLocation(location);
     }
 
     public void checkLocationPermission() { //TESTE verificar o que faz
+        /*
         int hasWriteStoragePermission;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            hasWriteStoragePermission = getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+            hasWriteStoragePermission = getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CHECK_SETTINGS);
                 return;
             }
+        }*/
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         }
+
     }
 
     @Override
@@ -113,7 +102,7 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
@@ -124,36 +113,22 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
         markername.remove();
         latitude = location.getLatitude();
         longitude = location.getLongitude();
-        DisplayLoc(location);
+        markername.remove();
+        DisplayLocation(location);
     }
 
     @SuppressLint("MissingPermission")
-    public void DisplayLoc(Location location){
-        longitude = location.getLongitude();
+    public void DisplayLocation(Location location) {
         latitude = location.getLatitude();
-        LatLng sydney = new LatLng(latitude,longitude);
-        currentLocationMarker = mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-
-    }
-
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
+        longitude = location.getLongitude();
+        LatLng loc = new LatLng(latitude, longitude);
+        if(markername != null){
+            markername.remove();
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
-
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-
-        // Add a marker in Sydney and move the camera
-        DisplayLoc(location);
+        markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me"));
     }
 
+    /*
     private void addMapMarkers(){
         if(mMap != null){
             if(mClusterManager == null){
@@ -199,6 +174,13 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
             mClusterManager.cluster();
             setCameraView();
         }
-    }
+    }*/
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        mMap = googleMap;
+        requestlocation();
+        //LatLng sydney = new LatLng(38.756829, -9.155290);
+        requestlocation();
+    }
 }
