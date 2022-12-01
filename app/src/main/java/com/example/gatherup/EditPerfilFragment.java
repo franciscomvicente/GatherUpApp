@@ -94,23 +94,6 @@ public class EditPerfilFragment extends Fragment {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        /*
-        inputDatePicker.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    getContext(), android.R.style.Theme_Holo_Dialog_MinWidth, setListener, year, month, day);
-            datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            datePickerDialog.show();
-        });
-
-        //LISTENER FOR DATE PICKER
-        setListener = (view12, year1, month1, dayOfMonth) -> {
-            month1 = month1 +1;
-            String date = day+"/"+ month1 +"/"+ year1;
-            inputDatePicker.setText(date);
-        };
-
-         */
-
         inputDatePicker.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog_MinWidth,(view12, year1, month1, dayOfMonth) -> {
                 month1 = month1 +1;
