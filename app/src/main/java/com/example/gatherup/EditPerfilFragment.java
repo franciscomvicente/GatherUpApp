@@ -1,5 +1,6 @@
 package com.example.gatherup;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -13,38 +14,46 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.CalendarContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class EditPerfilFragment extends Fragment {
 
-    Button saveProfileButton;
+    Button btnSaveProfile;
     ImageView inputProfilePhoto;
-    TextView inputDatePicker;
+    EditText inputName, inputDatePicker, inputBio;
+    Switch inputPrivate;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -53,20 +62,17 @@ public class EditPerfilFragment extends Fragment {
 
     StorageReference storageReference;
 
-    DatePickerDialog.OnDateSetListener setListener;
-
-    public EditPerfilFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_edit_perfil, container, false);
 
-        saveProfileButton = view.findViewById(R.id.SaveProfile);
+        btnSaveProfile = view.findViewById(R.id.btnSaveProfile);
         inputProfilePhoto = view.findViewById(R.id.inputProfilePhoto);
+        inputName = view.findViewById(R.id.inputName);
         inputDatePicker = view.findViewById(R.id.inputDatePicker);
+        inputBio = view.findViewById(R.id.inputBio);
+        inputPrivate = view.findViewById(R.id.inputPrivate);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -74,10 +80,22 @@ public class EditPerfilFragment extends Fragment {
         userID = user.getUid();
         storageReference = FirebaseStorage.getInstance().getReference();
 
+        DocumentReference documentReference = store.collection("Users").document(userID);
+        documentReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                inputName.setText(value.getString("Name"));
+                inputDatePicker.setText(value.getString("BirthDate"));
+                inputBio.setText(value.getString("Bio"));
+            }
+        });
+
         StorageReference profileReference = storageReference.child("Users/"+ userID + "/profile.jpg");
         profileReference.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(inputProfilePhoto));
 
-        saveProfileButton.setOnClickListener(view1 -> {
+        btnSaveProfile.setOnClickListener(view1 -> {
+            PerformSave();
+
             Fragment myProfileFragment = new MyProfileFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, myProfileFragment).commit();
@@ -104,7 +122,28 @@ public class EditPerfilFragment extends Fragment {
             datePickerDialog.show();
         });
 
+
+
         return view;
+    }
+
+    private void PerformSave() {
+        String name = inputName.getText().toString().trim();
+        String birthdate = inputDatePicker.getText().toString();
+        String bio = inputBio.getText().toString().trim();
+
+        userID = user.getUid();
+        DocumentReference documentReference = store.collection("Users").document(userID);
+        Map<String,Object> user = new HashMap<>();
+        user.put("Name", name);
+        user.put("BirthDate", birthdate);
+        user.put("Bio", bio);
+        documentReference.update(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "onSuccess:" + userID +"profile edited");
+            }
+        });
     }
 
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {

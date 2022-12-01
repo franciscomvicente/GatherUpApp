@@ -33,7 +33,7 @@ import com.squareup.picasso.Picasso;
 public class MyProfileFragment extends Fragment {
 
     ImageView outputProfilePhoto;
-    TextView outputUsername, outputDescription;
+    TextView outputUsername, outputBio;
     Button btnEditProfile, btnLogout;
 
     FirebaseAuth auth;
@@ -53,7 +53,7 @@ public class MyProfileFragment extends Fragment {
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnLogout = view.findViewById(R.id.btnLogout);
         outputUsername = view.findViewById(R.id.outputUsername);
-        outputDescription = view.findViewById(R.id.outputDescription);
+        outputBio = view.findViewById(R.id.outputBio);
         outputProfilePhoto = view.findViewById(R.id.outputProfilePhoto);
 
         auth = FirebaseAuth.getInstance();
@@ -75,7 +75,7 @@ public class MyProfileFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 outputUsername.setText(value.getString("Username"));
-                outputDescription.setText(value.getString("Description"));
+                outputBio.setText(value.getString("Bio"));
             }
         });
 

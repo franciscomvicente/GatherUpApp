@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
             app:cardCornerRadius="250dp"
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtAlterarFoto"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditPhoto"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -38,44 +38,44 @@
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
             android:background="?android:attr/listDivider"
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtSobreTi"
+            app:layout_constraintBottom_toTopOf="@+id/txtAboutYou"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtAlterarFoto" />
+            app:layout_constraintTop_toBottomOf="@+id/txtEditPhoto" />
 
         <TextView
-            android:id="@+id/EPtxtSobreTi"
+            android:id="@+id/txtAboutYou"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="14dp"
             android:text="About you:"
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtNome"
+            app:layout_constraintBottom_toTopOf="@+id/txtName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider1" />
 
         <TextView
-            android:id="@+id/EPtxtNome"
+            android:id="@+id/txtName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:text="Name: "
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtIdade"
+            app:layout_constraintBottom_toTopOf="@+id/txtAge"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtSobreTi" />
+            app:layout_constraintTop_toBottomOf="@+id/txtAboutYou" />
 
         <TextView
-            android:id="@+id/EPtxtIdade"
+            android:id="@+id/txtAge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Age: "
+            android:text="Born in: "
             app:layout_constraintBottom_toTopOf="@+id/EPtxtPreferencias"
-            app:layout_constraintStart_toStartOf="@+id/EPtxtNome"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtNome" />
+            app:layout_constraintStart_toStartOf="@+id/txtName"
+            app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
         <TextView
             android:id="@+id/EPtxtPreferencias"
@@ -84,8 +84,8 @@
             android:layout_marginTop="24dp"
             android:text="Preferences:"
             app:layout_constraintBottom_toTopOf="@+id/EPtxtAddPreferencias"
-            app:layout_constraintStart_toStartOf="@+id/EPtxtIdade"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtIdade" />
+            app:layout_constraintStart_toStartOf="@+id/txtAge"
+            app:layout_constraintTop_toBottomOf="@+id/txtAge" />
 
         <TextView
             android:id="@+id/EPtxtAddPreferencias"
@@ -94,17 +94,17 @@
             android:layout_marginTop="24dp"
             android:layout_marginBottom="3dp"
             android:text="Add Preferences"
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtAddDescricao"
+            app:layout_constraintBottom_toTopOf="@+id/txtBio"
             app:layout_constraintStart_toStartOf="@+id/EPtxtPreferencias"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtPreferencias" />
 
         <TextView
-            android:id="@+id/EPtxtAddDescricao"
+            android:id="@+id/txtBio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
-            android:text="Description: "
+            android:text="Bio: "
             app:layout_constraintBottom_toTopOf="@+id/divider2"
             app:layout_constraintStart_toStartOf="@+id/EPtxtAddPreferencias"
             app:layout_constraintTop_toBottomOf="@+id/EPtxtAddPreferencias" />
@@ -117,7 +117,7 @@
             app:layout_constraintBottom_toTopOf="@+id/EPtxtPrivacidade"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtAddDescricao" />
+            app:layout_constraintTop_toBottomOf="@+id/txtBio" />
 
         <TextView
             android:id="@+id/EPtxtPrivacidade"
@@ -126,24 +126,14 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:text="Privacy:"
-            app:layout_constraintBottom_toTopOf="@+id/EPtxtEstado"
+            app:layout_constraintBottom_toTopOf="@+id/txtPrivate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
-        <TextView
-            android:id="@+id/EPtxtEstado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
-            android:layout_marginTop="8dp"
-            android:text="State: "
-            app:layout_constraintBottom_toTopOf="@+id/SaveProfile"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtPrivacidade" />
 
         <TextView
-            android:id="@+id/EPtxtAlterarFoto"
+            android:id="@+id/txtEditPhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -154,7 +144,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/inputName"
             style="@style/Inputs"
             android:layout_width="0dp"
             android:layout_height="30dp"
@@ -163,9 +153,9 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:inputType="textPersonName"
-            app:layout_constraintBaseline_toBaselineOf="@+id/EPtxtNome"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/EPtxtNome" />
+            app:layout_constraintStart_toEndOf="@+id/txtName" />
 
         <EditText
             android:id="@+id/inputDatePicker"
@@ -178,9 +168,9 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:inputType="datetime"
-            app:layout_constraintBaseline_toBaselineOf="@+id/EPtxtIdade"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtAge"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/EPtxtIdade" />
+            app:layout_constraintStart_toEndOf="@+id/txtAge" />
 
         <EditText
             style="@style/Inputs"
@@ -209,7 +199,7 @@
             app:layout_constraintStart_toEndOf="@+id/EPtxtAddPreferencias" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/inputBio"
             style="@style/Inputs"
             android:layout_width="0dp"
             android:layout_height="30dp"
@@ -217,38 +207,46 @@
             android:background="@drawable/fields_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/EPtxtAddDescricao"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtBio"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/EPtxtAddDescricao" />
+            app:layout_constraintStart_toEndOf="@+id/txtBio" />
 
-        <EditText
-            android:id="@+id/editText4"
-            style="@style/Inputs"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/fields_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/EPtxtEstado"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/EPtxtEstado" />
+        <TextView
+            android:id="@+id/txtPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:layout_marginTop="8dp"
+            android:text="Private: "
+            app:layout_constraintBottom_toTopOf="@+id/btnSaveProfile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/EPtxtPrivacidade" />
+
+        <Switch
+            android:id="@+id/inputPrivate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:thumbTint="@drawable/thump"
+            android:trackTint="@drawable/track"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtPrivate"
+            app:layout_constraintStart_toEndOf="@+id/txtPrivate"
+            android:switchMinWidth="65dp"/>
 
         <Button
-            android:id="@+id/SaveProfile"
+            android:id="@+id/btnSaveProfile"
             style="@style/ButtonsFino"
             android:layout_width="300dp"
             android:layout_height="48dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/buttons_bg"
-            android:onClick="SendMessage"
             android:text="@string/Save"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EPtxtEstado" />
+            app:layout_constraintTop_toBottomOf="@+id/txtPrivate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
