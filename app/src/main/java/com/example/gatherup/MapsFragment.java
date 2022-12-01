@@ -52,7 +52,6 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
             mMap = googleMap;
             requestlocation();
             //LatLng sydney = new LatLng(38.756829, -9.155290);
-            requestlocation();
         }
     };
 
@@ -76,10 +75,7 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
                 return;
             }
         }*/
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
         }
 
@@ -119,13 +115,22 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
 
     @SuppressLint("MissingPermission")
     public void DisplayLocation(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+
+        if(location!=null){
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+
+        if(location==null){
+            latitude = 38;
+            longitude = -9;
+        }
         LatLng loc = new LatLng(latitude, longitude);
         if(markername != null){
             markername.remove();
         }
         markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me"));
+
     }
 
     /*
@@ -181,6 +186,5 @@ public class MapsFragment extends Fragment implements LocationListener,OnMapRead
         mMap = googleMap;
         requestlocation();
         //LatLng sydney = new LatLng(38.756829, -9.155290);
-        requestlocation();
     }
 }
