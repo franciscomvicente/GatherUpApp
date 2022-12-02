@@ -183,6 +183,7 @@ public class CreateEventFragment extends Fragment {
         String duration = pickerVals[inputCreateEvent_Duration.getValue()];
         String local = inputCreateEvent_Local.getText().toString().trim();
         String description = inputCreateEvent_Description.getText().toString().trim();
+        String hours = inputCreateEvent_Hours.getText().toString().trim();
         //PRIVATE OR NOT
         boolean private_event;
         if(inputCreateEvent_PrivateEvent.isChecked()){
@@ -204,6 +205,7 @@ public class CreateEventFragment extends Fragment {
         event.put("Local", local);
         event.put("Description", description);
         event.put("Private", private_event);
+        event.put("Hours", hours);
         event.put("CreatorID", userID);
         documentEventReference.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -224,7 +226,7 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        uploadImageToFirebase(imageUri);
+        if(!(imageUri == null)){uploadImageToFirebase(imageUri);}
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
