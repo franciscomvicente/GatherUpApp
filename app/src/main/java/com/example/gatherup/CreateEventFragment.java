@@ -184,6 +184,7 @@ public class CreateEventFragment extends Fragment {
         String local = inputCreateEvent_Local.getText().toString().trim();
         String description = inputCreateEvent_Description.getText().toString().trim();
         String hours = inputCreateEvent_Hours.getText().toString().trim();
+
         //PRIVATE OR NOT
         boolean private_event;
         if(inputCreateEvent_PrivateEvent.isChecked()){
@@ -218,7 +219,7 @@ public class CreateEventFragment extends Fragment {
         DocumentReference ref = store.collection("Events").document(eventID);
         DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
         Map<String, Object> user = new HashMap<>();
-        user.put("Referência", ref);
+        user.put("Referência", ref);       //VERIFICAR ---------------
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {

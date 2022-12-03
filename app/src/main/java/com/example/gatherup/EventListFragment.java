@@ -13,11 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.example.gatherup.Utils.EventsModel;
+import com.example.gatherup.Utils.FirestoreAdapter;
 import com.firebase.ui.firestore.SnapshotParser;
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

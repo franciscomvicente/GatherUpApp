@@ -5,169 +5,248 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EventSpecsFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/txtCreateEvent_EventTitle"
+            android:id="@+id/outputEventSpecs_Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
             android:text="Event Title"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/EventSpecsCardView2" />
 
         <TextView
-            android:id="@+id/txtEventLocal"
-            android:layout_marginTop="10dp"
+            android:id="@+id/outputEventSpecs_Local"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="9dp"
+            android:justificationMode="inter_word"
             android:text="Local"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_EventTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/outputEventSpecs_Title" />
 
         <TextView
             android:id="@+id/txtCreateEvent_EventSettings"
-            android:layout_marginTop="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Event Settings"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txtHost"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtEventLocal" />
+            app:layout_constraintTop_toBottomOf="@+id/outputEventSpecs_Local" />
 
         <View
             android:id="@+id/view"
-            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
             android:background="@color/DarkBlue"
+            app:layout_constraintBottom_toTopOf="@+id/txtCreateEvent_EventSettings"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtEventLocal" />
+            app:layout_constraintTop_toBottomOf="@+id/outputEventSpecs_Local" />
 
         <TextView
             android:id="@+id/txtHost"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="8dp"
             android:text="Host"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_EventSettings" />
 
         <TextView
-            android:id="@+id/txtUsername"
-            android:layout_marginStart="10dp"
+            android:id="@+id/outputEventSpecs_Username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="username"
             android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/txtHost" />
+            app:layout_constraintBottom_toBottomOf="@+id/EventSpecsCardView"
+            app:layout_constraintStart_toEndOf="@+id/EventSpecsCardView"
+            app:layout_constraintTop_toTopOf="@+id/EventSpecsCardView" />
 
         <TextView
             android:id="@+id/txtCreateEvent_Theme"
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Theme:"
             android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintBottom_toTopOf="@+id/txtDescription"
+            app:layout_constraintStart_toStartOf="@+id/EventSpecsCardView"
+            app:layout_constraintTop_toBottomOf="@+id/EventSpecsCardView" />
+
+        <EditText
+            android:id="@+id/outputEventSpecs_Theme"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtCreateEvent_Theme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Theme" />
 
         <TextView
             android:id="@+id/txtDescription"
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Description:"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txtCapacity"
             app:layout_constraintStart_toStartOf="@+id/txtCreateEvent_Theme"
             app:layout_constraintTop_toBottomOf="@+id/txtCreateEvent_Theme" />
 
+        <EditText
+            android:id="@+id/outputEventSpecs_Description"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtDescription" />
+
         <TextView
             android:id="@+id/txtCapacity"
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Capacity:"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txtDate"
             app:layout_constraintStart_toStartOf="@+id/txtDescription"
             app:layout_constraintTop_toBottomOf="@+id/txtDescription" />
 
+        <EditText
+            android:id="@+id/outputEventSpecs_Capacity"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtCapacity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtCapacity" />
+
         <TextView
             android:id="@+id/txtDate"
-            android:layout_marginTop="25dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Date:"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/txtCreateEvent_Duration"
             app:layout_constraintStart_toStartOf="@+id/txtCapacity"
             app:layout_constraintTop_toBottomOf="@+id/txtCapacity" />
+
+        <EditText
+            android:id="@+id/outputEventSpecs_Date"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtDate" />
 
         <TextView
             android:id="@+id/txtCreateEvent_Duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:text="Duration:"
             android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btnGroupChat"
             app:layout_constraintStart_toStartOf="@+id/txtDate"
             app:layout_constraintTop_toBottomOf="@+id/txtDate" />
 
-        <TextView
-            android:id="@+id/txtGroupChat"
-            android:layout_marginStart="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Group Chat"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintStart_toEndOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4" />
+        <EditText
+            android:id="@+id/outputEventSpecs_Duration"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtCreateEvent_Duration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Duration" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="106dp"
-            android:layout_height="111dp"
+        <androidx.cardview.widget.CardView
+
+            android:id="@+id/EventSpecsCardView2"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:scaleType="fitXY"
+            app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/googleg_standard_color_18" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView3"
+            <ImageView
+                android:id="@+id/outputEventSpecs_EventPhoto"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+
+            android:id="@+id/EventSpecsCardView"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="@+id/txtHost"
             app:layout_constraintStart_toStartOf="@+id/txtHost"
-            app:layout_constraintTop_toBottomOf="@+id/txtHost"
-            app:srcCompat="@drawable/ic_baseline_person_24" />
+            app:layout_constraintTop_toTopOf="@+id/txtHost">
+
+            <ImageView
+                android:id="@+id/outputEventSpecs_UserPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
 
         <ImageView
-            android:id="@+id/ESGroupChat"
+            android:id="@+id/btnGroupChat"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/txtCreateEvent_Duration"
@@ -175,16 +254,15 @@
             app:srcCompat="@drawable/ic_baseline_3p_24" />
 
         <Button
-            android:id="@+id/ESJoinEvent"
+            android:id="@+id/btnJoinEvent"
             style="@style/ButtonsFino"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:background="@drawable/buttons_bg"
-            android:onClick="CreateEvent"
             android:text="@string/join_event"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/btnGroupChat"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="88dp"
-            android:layout_marginEnd="50dp"/>
+            app:layout_constraintStart_toEndOf="@+id/btnGroupChat"
+            app:layout_constraintTop_toTopOf="@+id/btnGroupChat" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

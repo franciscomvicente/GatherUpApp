@@ -1,4 +1,4 @@
-package com.example.gatherup;
+package com.example.gatherup.Utils;
 
 public class EventsModel {
     private String Title, Hours, Date;
