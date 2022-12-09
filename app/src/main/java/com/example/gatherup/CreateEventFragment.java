@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -62,6 +63,7 @@ import java.util.Map;
 public class CreateEventFragment extends Fragment {
 
     ImageView inputCreateEvent_EventPhoto;
+    BottomNavigationView bottomNavigationView;
     Button btnCreateEvent;
     EditText inputCreateEvent_Title, inputCreateEvent_Theme, inputCreateEvent_Date, inputCreateEvent_Local, inputCreateEvent_Description, inputCreateEvent_Hours;
     NumberPicker inputCreateEvent_MaxCapacity, inputCreateEvent_Duration;
@@ -80,6 +82,8 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+
+        bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
 
         btnCreateEvent = view.findViewById(R.id.btnCreateEvent);
         inputCreateEvent_EventPhoto = view.findViewById(R.id.inputCreateEvent_EventPhoto);
@@ -124,6 +128,7 @@ public class CreateEventFragment extends Fragment {
                 PerformCreation();
                 Fragment mapsFragment = new MapsFragment();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                bottomNavigationView.setSelectedItemId(R.id.map);
                 ft.replace(R.id.MainFragment, mapsFragment).commit();
             }
         });

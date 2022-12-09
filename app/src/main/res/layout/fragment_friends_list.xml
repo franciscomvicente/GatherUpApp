@@ -14,19 +14,19 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/FLview"
+            android:id="@+id/inputFriendName"
             android:layout_width="275sp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/fields_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/FLRemoveFriend">
+            app:layout_constraintTop_toBottomOf="@+id/txtFindFriend">
 
         </EditText>
 
         <TextView
-            android:id="@+id/FLRemoveFriend"
+            android:id="@+id/txtFindFriend"
             android:layout_width="115dp"
             android:layout_height="0dp"
             android:text="Encontre Amigos"
@@ -35,17 +35,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ListView
-            android:layout_width="match_parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/outputFriends"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/EPAddFriends"
-            app:layout_constraintTop_toBottomOf="@+id/FLview"
-            app:layout_constraintVertical_bias="1.0"
-            android:layout_marginBottom="18sp"/>
+            android:layout_marginBottom="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnAddFriend"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inputFriendName" />
 
         <Button
-            android:id="@+id/EPAddFriends"
+            android:id="@+id/btnAddFriend"
             style="@style/ButtonsFino"
             android:layout_width="300dp"
             android:background="@drawable/buttons_bg"

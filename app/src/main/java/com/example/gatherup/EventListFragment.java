@@ -72,6 +72,6 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
         eventSpecsFragment.setArguments(b);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, eventSpecsFragment).commit();
+        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
     }
 }

@@ -66,14 +66,14 @@ public class MapsFragment extends Fragment implements LocationListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        setHasOptionsMenu(true);
         listaEventosButton = view.findViewById(R.id.ListButton);
 
         listaEventosButton.setOnClickListener(view1 -> {
             Fragment eventListFragment = new EventListFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, eventListFragment).commit();
+            ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
-
         return view;
     }
 
