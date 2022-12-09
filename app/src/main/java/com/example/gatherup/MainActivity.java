@@ -15,8 +15,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
     BottomNavigationView bottomNavigationView;
+
+    public Fragment getCurrentFragment() {
+        return this.getSupportFragmentManager().findFragmentById(R.id.MainFragment);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.map);
     }
@@ -39,17 +42,20 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         switch (item.getItemId()) {
             case R.id.map:
                 getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, mapsFragment).commit();
+                System.out.println(getCurrentFragment());
                 return true;
             case R.id.new_event:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).addToBackStack(null).commit();
                 return true;
             case R.id.friends:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, friendsListFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, friendsListFragment).addToBackStack(null).commit();
                 return true;
             case R.id.perfil:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, myProfileFragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, myProfileFragment).addToBackStack(null).commit();
                 return true;
         }
         return false;
     }
+
+
 }

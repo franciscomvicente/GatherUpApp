@@ -254,11 +254,12 @@
             app:srcCompat="@drawable/ic_baseline_3p_24" />
 
         <Button
-            android:id="@+id/btnJoinEvent"
+            android:id="@+id/btnEvent"
             style="@style/ButtonsFino"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_marginStart="54dp"
+            android:layout_marginEnd="54dp"
             android:background="@drawable/buttons_bg"
-            android:text="@string/join_event"
             app:layout_constraintBottom_toBottomOf="@+id/btnGroupChat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btnGroupChat"

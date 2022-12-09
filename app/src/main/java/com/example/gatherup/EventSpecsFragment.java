@@ -3,6 +3,7 @@ package com.example.gatherup;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,7 +16,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,11 +30,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class EventSpecsFragment extends Fragment {
 
-    Button btnJoinEvent;
+    Button btnEvent;
     ImageView btnGroupChat, outputEventsSpecs_EventPhoto, outputEventsSpecs_UserPhoto;
     TextView outputEventSpecs_Title, outputEventSpecs_Local, outputEventSpecs_Username, outputEventSpecs_Theme,
             outputEventSpecs_Description, outputEventSpecs_Capacity, outputEventSpecs_Duration, outputEventSpecs_Date;
@@ -52,7 +57,7 @@ public class EventSpecsFragment extends Fragment {
         String eventID = getArguments().getString("key");
         Log.d("TAG","TESTEEEE"+ eventID);
 
-        btnJoinEvent = view.findViewById(R.id.btnJoinEvent);
+        btnEvent = view.findViewById(R.id.btnEvent);
         btnGroupChat= view.findViewById(R.id.btnGroupChat);
         outputEventsSpecs_EventPhoto = view.findViewById(R.id.outputEventSpecs_EventPhoto);
         outputEventsSpecs_UserPhoto = view.findViewById(R.id.outputEventSpecs_UserPhoto);
@@ -70,14 +75,10 @@ public class EventSpecsFragment extends Fragment {
         store = FirebaseFirestore.getInstance();
         userID = user.getUid();
 
+        //EVENT PHOTO
         storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference eventPhoto = storageReference.child("Events/"+ eventID + "/eventPhoto.jpg");
-        eventPhoto.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(outputEventsSpecs_EventPhoto);
-            }
-        });
+        eventPhoto.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(outputEventsSpecs_EventPhoto));
 
         DocumentReference eventReference = store.collection("Events").document(eventID);
         eventReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {                                  //this
@@ -85,7 +86,6 @@ public class EventSpecsFragment extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 outputEventSpecs_Title.setText(value.getString("Title"));
                 outputEventSpecs_Local.setText(value.getString("Local"));
-                //outputEventSpecs_Username.setText(value.getString("Username")); REVER
                 outputEventSpecs_Theme.setText(value.getString("Theme"));
                 outputEventSpecs_Description.setText(value.getString("Description"));
                 outputEventSpecs_Capacity.setText(String.valueOf(Objects.requireNonNull(value.getLong("MaxCapacity")).intValue()));
@@ -110,9 +110,7 @@ public class EventSpecsFragment extends Fragment {
             }
         });
 
-        btnJoinEvent.setOnClickListener(view1 -> {
-
-        });
+        CheckRegistered(eventID);
 
         btnGroupChat.setOnClickListener(view1 -> {
             Fragment chatFragment = new ChatFragment();
@@ -125,5 +123,52 @@ public class EventSpecsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void JoinEvent(String eventID){
+        DocumentReference ref = store.collection("Events").document(eventID);
+        DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
+        Map<String, Object> user = new HashMap<>();
+        user.put("Referência", ref);
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "onSuccess:" + eventID + "associated" + userID);
+            }
+        });
+        CheckRegistered(eventID);
+    }
+
+    private void LeaveEvent(String eventID){
+        DocumentReference ref = store.collection("Events").document(eventID);
+        DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
+        documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "onSuccess:" + eventID + "disassociated" + userID);
+            }
+        });
+        CheckRegistered(eventID);
+    }
+
+    private void CheckRegistered(String eventID){
+        DocumentReference docIdRef = store.collection("Users").document(userID).collection("Events").document(eventID);
+        docIdRef.get().addOnCompleteListener(task -> {
+            String TAG = "Teste";
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    btnEvent.setText("Leave Event");
+                    btnEvent.setOnClickListener(v -> LeaveEvent(eventID));
+                    System.out.println("REGISTERED");
+                } else {
+                    btnEvent.setText("Join Event");
+                    btnEvent.setOnClickListener(v -> JoinEvent(eventID));
+                    System.out.println("NOT REGISTERED");
+                }
+            } else {
+                Log.d(TAG, "Failed with: ", task.getException());
+            }
+        });
     }
 }

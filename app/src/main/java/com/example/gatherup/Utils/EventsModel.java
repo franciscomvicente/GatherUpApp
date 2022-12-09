@@ -26,7 +26,7 @@ public class EventsModel {
     }
 
     public void setDate(String date) {
-        this.Date = Date;
+        this.Date = date;
     }
 
     public String getHours() {
