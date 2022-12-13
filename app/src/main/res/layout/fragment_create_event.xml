@@ -234,6 +234,7 @@
             android:background="@drawable/fields_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:focusableInTouchMode="false"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtCreateEvent_Local"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Local" />

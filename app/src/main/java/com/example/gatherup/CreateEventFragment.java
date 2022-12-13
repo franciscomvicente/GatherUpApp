@@ -8,20 +8,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Printer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,34 +19,33 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Switch;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.sucho.placepicker.AddressData;
+import com.sucho.placepicker.Constants;
+import com.sucho.placepicker.MapType;
+import com.sucho.placepicker.PlacePicker;
 
-import java.lang.ref.Reference;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CreateEventFragment extends Fragment {
@@ -74,6 +62,9 @@ public class CreateEventFragment extends Fragment {
     FirebaseFirestore store;
     String userID;
     String eventID;
+
+    Double longitude;
+    Double latitude;
 
     StorageReference storageReference;
     private Uri imageUri;
@@ -103,7 +94,7 @@ public class CreateEventFragment extends Fragment {
         userID = user.getUid();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        pickerVals = new String[] {"0:05m", "0:10m", "0:15m", "0:30m", "1h:00", "1h:30","2h:00","3h:00","5h:00","7h:00","12h:00","24h:00"};
+        pickerVals = new String[]{"0:05m", "0:10m", "0:15m", "0:30m", "1h:00", "1h:30", "2h:00", "3h:00", "5h:00", "7h:00", "12h:00", "24h:00"};
         inputCreateEvent_Duration.setMinValue(0);
         inputCreateEvent_Duration.setMaxValue(11);
         inputCreateEvent_Duration.setDisplayedValues(pickerVals);
@@ -112,19 +103,19 @@ public class CreateEventFragment extends Fragment {
         inputCreateEvent_MaxCapacity.setMaxValue(100);
 
         btnCreateEvent.setOnClickListener(v -> {
-            if(TextUtils.isEmpty(inputCreateEvent_Title.getText().toString())) {
+            if (TextUtils.isEmpty(inputCreateEvent_Title.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else if(TextUtils.isEmpty(inputCreateEvent_Theme.getText().toString())) {
+            } else if (TextUtils.isEmpty(inputCreateEvent_Theme.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else if(TextUtils.isEmpty(inputCreateEvent_Date.getText().toString())) {
+            } else if (TextUtils.isEmpty(inputCreateEvent_Date.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else if(TextUtils.isEmpty(inputCreateEvent_Local.getText().toString())) {
+            } else if (TextUtils.isEmpty(inputCreateEvent_Local.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else if(TextUtils.isEmpty(inputCreateEvent_Description.getText().toString())) {
+            } else if (TextUtils.isEmpty(inputCreateEvent_Description.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else if(TextUtils.isEmpty(inputCreateEvent_Hours.getText().toString())) {
+            } else if (TextUtils.isEmpty(inputCreateEvent_Hours.getText().toString())) {
                 inputCreateEvent_Title.setError("Your message");
-            }else {
+            } else {
                 PerformCreation();
                 Fragment mapsFragment = new MapsFragment();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -144,9 +135,9 @@ public class CreateEventFragment extends Fragment {
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         inputCreateEvent_Date.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog_MinWidth,(view12, year1, month1, dayOfMonth) -> {
-                month1 = month1 +1;
-                String date = dayOfMonth + "/"+ month1 +"/"+ year1;
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), android.R.style.Theme_Holo_Dialog_MinWidth, (view12, year1, month1, dayOfMonth) -> {
+                month1 = month1 + 1;
+                String date = dayOfMonth + "/" + month1 + "/" + year1;
                 inputCreateEvent_Date.setText(date);
             }, year, month, day);
             datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -166,6 +157,8 @@ public class CreateEventFragment extends Fragment {
 
         });
 
+        inputCreateEvent_Local.setOnClickListener(v -> localPicker());
+
         return view;
     }
 
@@ -180,21 +173,22 @@ public class CreateEventFragment extends Fragment {
         }
     });
 
-    private void PerformCreation(){
+    private void PerformCreation() {
         String title = inputCreateEvent_Title.getText().toString().trim();
         Integer max_capacity = inputCreateEvent_MaxCapacity.getValue();
         String theme = inputCreateEvent_Theme.getText().toString().trim();
         String date = inputCreateEvent_Date.getText().toString().trim();
         String duration = pickerVals[inputCreateEvent_Duration.getValue()];
-        String local = inputCreateEvent_Local.getText().toString().trim();
         String description = inputCreateEvent_Description.getText().toString().trim();
         String hours = inputCreateEvent_Hours.getText().toString().trim();
 
         //PRIVATE OR NOT
         boolean private_event;
-        if(inputCreateEvent_PrivateEvent.isChecked()){
+        if (inputCreateEvent_PrivateEvent.isChecked()) {
             private_event = true;
-        }else{private_event = false;}
+        } else {
+            private_event = false;
+        }
 
         //GET EVENT KEY
         DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("Events");
@@ -202,13 +196,13 @@ public class CreateEventFragment extends Fragment {
 
         //SAVE EVENT DOCUMENT
         DocumentReference documentEventReference = store.collection("Events").document(eventID);
-        Map<String,Object> event = new HashMap<>();
+        Map<String, Object> event = new HashMap<>();
         event.put("Title", title);
         event.put("MaxCapacity", max_capacity);
         event.put("Theme", theme);
         event.put("Date", date);
         event.put("Duration", duration);
-        event.put("Local", local);
+        event.put("Local", new GeoPoint(latitude,longitude));
         event.put("Description", description);
         event.put("Private", private_event);
         event.put("Hours", hours);
@@ -216,9 +210,10 @@ public class CreateEventFragment extends Fragment {
         documentEventReference.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                Log.d("TAG", "onSuccess:" + eventID +"EventCreated");
+                Log.d("TAG", "onSuccess:" + eventID + "EventCreated");
             }
         });
+
 
         //SAVE EVENT IN USER EVENT LIST
         DocumentReference ref = store.collection("Events").document(eventID);
@@ -232,22 +227,23 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        if(!(imageUri == null)){uploadImageToFirebase(imageUri);}
+        if (!(imageUri == null)) {
+            uploadImageToFirebase(imageUri);
+        }
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        StorageReference file = storageReference.child("Events/"+ eventID + "/eventPhoto.jpg");
+        StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
         file.putFile(imageUri);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        clearFields();
 
     }
 
-    private void clearFields(){
+    private void clearFields() {
         inputCreateEvent_EventPhoto.setImageResource(0);
         inputCreateEvent_Title.setText("");
         inputCreateEvent_Theme.setText("");
@@ -259,4 +255,39 @@ public class CreateEventFragment extends Fragment {
         inputCreateEvent_PrivateEvent.setText("");
         inputCreateEvent_Hours.setText("");
     }
+
+    private void localPicker() {
+        Intent intent = new PlacePicker.IntentBuilder()
+                .setLatLong(40.748672, -73.985628)
+                .showLatLong(true)
+                .setMapType(MapType.NORMAL)
+                .hideMarkerShadow(true)
+                .setFabColor(R.color.MiddleBlue)
+                .setMarkerImageImageColor(R.color.MiddleBlue)
+                .setBottomViewColor(R.color.SoftBlue)
+                .setPrimaryTextColor(R.color.MiddleBlue) // Change text color of Shortened Address
+                .setSecondaryTextColor(R.color.LightBlue) // Change text color of full Address
+                .disableMarkerAnimation(true)
+                .build(getActivity());
+        System.out.println("2");
+        pickeractivity.launch(intent);
+    }
+
+
+    ActivityResultLauncher<Intent> pickeractivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            try {
+                AddressData addressData = result.getData().getParcelableExtra(Constants.ADDRESS_INTENT);
+                System.out.println(addressData);
+                longitude = addressData.getLongitude();
+                latitude = addressData.getLatitude();
+                inputCreateEvent_Local.setText(addressData.toString());
+            } catch (Exception e) {
+                System.out.println("ERRO");
+                Log.e("MainActivity", e.getMessage());
+            }
+        }
+
+    });
 }

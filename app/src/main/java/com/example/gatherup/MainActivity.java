@@ -1,35 +1,28 @@
 package com.example.gatherup;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+
     BottomNavigationView bottomNavigationView;
-
-    public Fragment getCurrentFragment() {
-        return this.getSupportFragmentManager().findFragmentById(R.id.MainFragment);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.map);
+
     }
 
     MapsFragment mapsFragment = new MapsFragment();
@@ -42,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         switch (item.getItemId()) {
             case R.id.map:
                 getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, mapsFragment).commit();
-                System.out.println(getCurrentFragment());
                 return true;
             case R.id.new_event:
                 getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).addToBackStack(null).commit();

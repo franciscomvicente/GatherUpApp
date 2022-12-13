@@ -1,7 +1,6 @@
-package com.example.gatherup.utils;
+package com.example.gatherup.Utils;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.firestore.auth.User;
 import com.google.maps.android.clustering.ClusterItem;
 
 public class ClusterMarker implements ClusterItem {
@@ -10,14 +9,12 @@ public class ClusterMarker implements ClusterItem {
     private String title;
     private String snippet;
     private int iconPicture;
-    private User user;
 
-    public ClusterMarker(LatLng position, String title, String snippet, int iconPicture, User user) {
+    public ClusterMarker(LatLng position, String title, String snippet, int iconPicture) {
         this.position = position;
         this.title = title;
         this.snippet = snippet;
         this.iconPicture = iconPicture;
-        this.user = user;
     }
 
     public ClusterMarker() {
@@ -59,11 +56,4 @@ public class ClusterMarker implements ClusterItem {
         this.iconPicture = iconPicture;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

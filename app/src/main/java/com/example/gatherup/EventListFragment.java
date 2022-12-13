@@ -1,6 +1,10 @@
 package com.example.gatherup;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -8,11 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.gatherup.Utils.EventsModel;
 import com.example.gatherup.Utils.FirestoreAdapter;
@@ -47,6 +46,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
             @Override
             public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
+                System.out.println("1");
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
                 return eventsModel;

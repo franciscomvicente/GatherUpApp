@@ -1,4 +1,4 @@
-package com.example.gatherup.utils;
+package com.example.gatherup.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,7 +22,6 @@ public class ClusterManagerRenderer extends DefaultClusterRenderer<ClusterMarker
 
     public ClusterManagerRenderer(Context context, GoogleMap map, ClusterManager<ClusterMarker> clusterManager) {
         super(context, map, clusterManager);
-
 
         iconGenerator = new IconGenerator(context.getApplicationContext());
         imageView = new ImageView(context.getApplicationContext());
