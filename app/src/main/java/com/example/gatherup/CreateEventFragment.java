@@ -257,7 +257,7 @@ public class CreateEventFragment extends Fragment {
 
     private void localPicker() {
         Intent intent = new PlacePicker.IntentBuilder()
-                .setLatLong(40.748672, -73.985628)
+                .setLatLong(38.756435, -9.156538)
                 .showLatLong(true)
                 .setMapType(MapType.NORMAL)
                 .hideMarkerShadow(true)
