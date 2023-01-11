@@ -240,7 +240,6 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void clearFields() {

@@ -37,13 +37,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, mapsFragment).commit();
                 return true;
             case R.id.new_event:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, createEventFragment).addToBackStack("new_event").commit();
                 return true;
             case R.id.friends:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, friendsListFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, friendsListFragment).addToBackStack("friends").commit();
                 return true;
             case R.id.perfil:
-                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, myProfileFragment).addToBackStack(null).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.MainFragment, myProfileFragment).addToBackStack("perfil").commit();
                 return true;
         }
         return false;

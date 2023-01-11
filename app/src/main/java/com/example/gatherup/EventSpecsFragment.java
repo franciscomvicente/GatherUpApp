@@ -2,12 +2,6 @@ package com.example.gatherup;
 
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +10,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -69,7 +65,6 @@ public class EventSpecsFragment extends Fragment {
         outputEventSpecs_Capacity = view.findViewById(R.id.outputEventSpecs_Capacity);
         outputEventSpecs_Duration = view.findViewById(R.id.outputEventSpecs_Duration);
         outputEventSpecs_Date = view.findViewById(R.id.outputEventSpecs_Date);
-
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         store = FirebaseFirestore.getInstance();
@@ -85,7 +80,7 @@ public class EventSpecsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 outputEventSpecs_Title.setText(value.getString("Title"));
-                outputEventSpecs_Local.setText(value.getString("Local"));
+                //outputEventSpecs_Local.setText(value.getGeoPoint("Local"));                                       //VER DEPOIS
                 outputEventSpecs_Theme.setText(value.getString("Theme"));
                 outputEventSpecs_Description.setText(value.getString("Description"));
                 outputEventSpecs_Capacity.setText(String.valueOf(Objects.requireNonNull(value.getLong("MaxCapacity")).intValue()));
