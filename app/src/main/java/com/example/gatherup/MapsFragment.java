@@ -79,8 +79,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         }
     };
 
-
-    @SuppressLint("MissingPermission") //NAO VERIFICA PERMISSOES, TIRAR DEPOIS
+    //NAO VERIFICA PERMISSOES, TIRAR DEPOIS
     public void requestlocation(){
         checkLocationPermission();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -204,15 +203,16 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             longitude = location.getLongitude();
         }
 
-        if (location == null) {
-            latitude = 38;
-            longitude = -9;
-        }
         LatLng loc = new LatLng(latitude, longitude);
         if (markername != null) {
             markername.remove();
         }
         markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
+
+        if (location == null) {
+            markername.remove();
+        }
+
 
     }
 
