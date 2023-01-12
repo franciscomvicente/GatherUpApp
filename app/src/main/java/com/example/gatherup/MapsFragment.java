@@ -42,6 +42,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -257,16 +258,26 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                             snippet,
                             avatar
                     );
+
+
+
+
+
                     mClusterManager.addItem(newClusterMarker);
                     mClusterMarkers.add(newClusterMarker);
+
+
 
                 }catch (NullPointerException e){
                     Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                 }
             }
+
             mClusterManager.cluster();
+
         }
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
