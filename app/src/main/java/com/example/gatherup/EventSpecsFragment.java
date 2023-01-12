@@ -140,7 +140,6 @@ public class EventSpecsFragment extends Fragment {
     }
 
     private void LeaveEvent(String eventID){
-        DocumentReference ref = store.collection("Events").document(eventID);
         DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -149,6 +148,10 @@ public class EventSpecsFragment extends Fragment {
             }
         });
         CheckRegistered(eventID);
+    }
+
+    private void EditEvent(String eventID){
+
     }
 
     private void CheckRegistered(String eventID){
