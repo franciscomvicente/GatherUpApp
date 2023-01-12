@@ -60,6 +60,7 @@ public class CreateEventFragment extends Fragment {
     EditText inputCreateEvent_Title, inputCreateEvent_Theme, inputCreateEvent_Date, inputCreateEvent_Local, inputCreateEvent_Description, inputCreateEvent_Hours;
     NumberPicker inputCreateEvent_MaxCapacity, inputCreateEvent_Duration;
     Switch inputCreateEvent_PrivateEvent;
+    String address;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -108,17 +109,17 @@ public class CreateEventFragment extends Fragment {
 
         btnCreateEvent.setOnClickListener(v -> {
             if (TextUtils.isEmpty(inputCreateEvent_Title.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Title.setError("Need to set a Title");
             } else if (TextUtils.isEmpty(inputCreateEvent_Theme.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Theme.setError("Need to set a Theme");
             } else if (TextUtils.isEmpty(inputCreateEvent_Date.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Date.setError("Need to choose a Date");
             } else if (TextUtils.isEmpty(inputCreateEvent_Local.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Local.setError("Need to choose a Local");
             } else if (TextUtils.isEmpty(inputCreateEvent_Description.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Description.setError("Need to set a Description");
             } else if (TextUtils.isEmpty(inputCreateEvent_Hours.getText().toString())) {
-                inputCreateEvent_Title.setError("Your message");
+                inputCreateEvent_Hours.setError("Need to choose a Hour");
             } else {
                 PerformCreation();
                 Fragment mapsFragment = new MapsFragment();
@@ -186,7 +187,7 @@ public class CreateEventFragment extends Fragment {
         String description = inputCreateEvent_Description.getText().toString().trim();
         String hours = inputCreateEvent_Hours.getText().toString().trim();
 
-
+        //Timestamp
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         Date parsedDate = null;
         try {
@@ -218,10 +219,10 @@ public class CreateEventFragment extends Fragment {
         event.put("Theme", theme);
         event.put("Duration", duration);
         event.put("Local", new GeoPoint(latitude,longitude));
+        event.put("Address", address);
         event.put("Date", timestamp);
         event.put("Description", description);
         event.put("Private", private_event);
-        event.put("Hours", hours);
         event.put("CreatorID", userID);
         documentEventReference.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -229,7 +230,6 @@ public class CreateEventFragment extends Fragment {
                 Log.d("TAG", "onSuccess:" + eventID + "EventCreated");
             }
         });
-
 
         //SAVE EVENT IN USER EVENT LIST
         DocumentReference ref = store.collection("Events").document(eventID);
@@ -268,7 +268,6 @@ public class CreateEventFragment extends Fragment {
         inputCreateEvent_Local.setText("");
         inputCreateEvent_Description.setText("");
         inputCreateEvent_PrivateEvent.setText("");
-        inputCreateEvent_Hours.setText("");
     }
 
     private void localPicker() {
@@ -284,7 +283,6 @@ public class CreateEventFragment extends Fragment {
                 .setSecondaryTextColor(R.color.LightBlue) // Change text color of full Address
                 .disableMarkerAnimation(true)
                 .build(getActivity());
-        System.out.println("2");
         pickeractivity.launch(intent);
     }
 
@@ -294,10 +292,10 @@ public class CreateEventFragment extends Fragment {
         public void onActivityResult(ActivityResult result) {
             try {
                 AddressData addressData = result.getData().getParcelableExtra(Constants.ADDRESS_INTENT);
-                System.out.println(addressData);
+                address = addressData.toString();
                 longitude = addressData.getLongitude();
                 latitude = addressData.getLatitude();
-                inputCreateEvent_Local.setText(addressData.toString());
+                inputCreateEvent_Local.setText(address);
             } catch (Exception e) {
                 System.out.println("ERRO");
                 Log.e("MainActivity", e.getMessage());

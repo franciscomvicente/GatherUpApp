@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -79,14 +81,16 @@ public class EventSpecsFragment extends Fragment {
         eventReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {                                  //this
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String date = toDate(value);
+
                 outputEventSpecs_Title.setText(value.getString("Title"));
-                //outputEventSpecs_Local.setText(value.getGeoPoint("Local"));                                       //VER DEPOIS
+                outputEventSpecs_Local.setText(value.getString("Address"));
                 outputEventSpecs_Theme.setText(value.getString("Theme"));
                 outputEventSpecs_Description.setText(value.getString("Description"));
                 outputEventSpecs_Capacity.setText(String.valueOf(Objects.requireNonNull(value.getLong("MaxCapacity")).intValue()));
                 outputEventSpecs_Duration.setText(value.getString("Duration"));
-                //outputEventSpecs_Date.setText(("Date"));
-                System.out.println(value.getTimestamp("Date"));
+                outputEventSpecs_Date.setText(date);
+
 
                 creatorID = value.getString("CreatorID");
                 DocumentReference creatorReference = store.collection("Users").document(creatorID);
@@ -166,5 +170,14 @@ public class EventSpecsFragment extends Fragment {
                 Log.d(TAG, "Failed with: ", task.getException());
             }
         });
+    }
+
+    private String toDate(DocumentSnapshot value){
+        Timestamp timestamp = value.getTimestamp("Date");
+        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String time = sfd.format(timestamp.toDate());
+        String date = (String) time;
+
+        return date;
     }
 }
