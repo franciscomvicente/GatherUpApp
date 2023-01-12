@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -64,13 +65,10 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     Marker markername;
     Button listaEventosButton;
     private Location location;
-    Marker currentLocationMarker;
 
     private ClusterManager mClusterManager;
     private ClusterManagerRenderer mClusterManagerRenderer;
     private ArrayList<ClusterMarker> mClusterMarkers = new ArrayList<>();
-
-    private ArrayList<EventsModel> mEventLocations = new ArrayList<>();
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -134,7 +132,8 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
 
          */
 
-        store.collection("Events").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Timestamp currentTime = Timestamp.now();
+        store.collection("Events").whereGreaterThan("Date",currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -244,7 +243,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             for(EventsModel eventLocation: list){
                 try{
                     String snippet = "";
-                    snippet = eventLocation.getDescription() + "-" + eventLocation.getDate() + " at " + eventLocation.getHours();
+                    snippet = eventLocation.getDescription() + "-" + eventLocation.getDate();
                     int avatar = R.drawable.ic_baseline_3p_24;
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());

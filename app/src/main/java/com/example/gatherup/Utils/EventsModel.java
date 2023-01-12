@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
 public class EventsModel {
-    private String Title, Hours;
+    private String Title, Address;
     private Timestamp Date;
     private String eventID;
     private GeoPoint Local;
@@ -12,13 +12,13 @@ public class EventsModel {
 
     private EventsModel() {}
 
-    private EventsModel(String Title, String Hours, Timestamp Date, String eventID, GeoPoint Local, String Description){
+    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address){
         this.Title = Title;
         this.Date  = Date;
-        this.Hours = Hours;
         this.eventID = eventID;
         this.Local = Local;
         this.Description = Description;
+        this.Address = Address;
     }
 
     public String getTitle(){
@@ -35,14 +35,6 @@ public class EventsModel {
 
     public void setDate(Timestamp date) {
         this.Date = date;
-    }
-
-    public String getHours() {
-        return Hours;
-    }
-
-    public void setHours(String hours) {
-        this.Hours = hours;
     }
 
     public String getEventID() {
@@ -67,5 +59,13 @@ public class EventsModel {
 
     public void setDescription(String Description) {
         this.Description = Description;
+    }
+
+    public String getAddress() {
+        return Address;
+    }
+
+    public void setAddress(String Address) {
+        this.Address = Address;
     }
 }
