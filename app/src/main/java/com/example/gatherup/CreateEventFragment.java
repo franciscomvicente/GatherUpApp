@@ -44,7 +44,11 @@ import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.MapType;
 import com.sucho.placepicker.PlacePicker;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -182,6 +186,18 @@ public class CreateEventFragment extends Fragment {
         String description = inputCreateEvent_Description.getText().toString().trim();
         String hours = inputCreateEvent_Hours.getText().toString().trim();
 
+
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        Date parsedDate = null;
+        try {
+            parsedDate = format.parse(date + " " + hours);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp timestamp = new Timestamp(parsedDate.getTime());
+        format.format(timestamp);
+
+
         //PRIVATE OR NOT
         boolean private_event;
         if (inputCreateEvent_PrivateEvent.isChecked()) {
@@ -200,9 +216,9 @@ public class CreateEventFragment extends Fragment {
         event.put("Title", title);
         event.put("MaxCapacity", max_capacity);
         event.put("Theme", theme);
-        event.put("Date", date);
         event.put("Duration", duration);
         event.put("Local", new GeoPoint(latitude,longitude));
+        event.put("Date", timestamp);
         event.put("Description", description);
         event.put("Private", private_event);
         event.put("Hours", hours);

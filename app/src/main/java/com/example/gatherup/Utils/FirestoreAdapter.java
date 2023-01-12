@@ -25,7 +25,7 @@ public class FirestoreAdapter extends FirestorePagingAdapter<EventsModel, Firest
     @Override
     protected void onBindViewHolder(@NonNull EventsViewHolder holder, int position, @NonNull EventsModel model) {
         holder.list_title.setText(model.getTitle());
-        holder.list_date.setText(model.getDate());
+        //holder.list_date.setText(model.getDate());
         holder.list_hour.setText(model.getHours());
     }
 
