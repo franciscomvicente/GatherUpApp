@@ -17,6 +17,7 @@ import com.example.gatherup.Utils.EventsModel;
 import com.example.gatherup.Utils.FirestoreAdapter;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -35,8 +36,11 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         outputEvents = view.findViewById(R.id.outputEvents);
         store = FirebaseFirestore.getInstance();
 
+        Timestamp currentTime = Timestamp.now();
+
         //QUERY
-        Query query = store.collection("Events");
+        Query query = store.collection("Events").whereGreaterThan("Date",currentTime);
+        System.out.println(currentTime);
 
         PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 

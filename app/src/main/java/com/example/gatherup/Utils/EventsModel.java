@@ -1,16 +1,18 @@
 package com.example.gatherup.Utils;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
 public class EventsModel {
-    private String Title, Hours, Date;
+    private String Title, Hours;
+    private Timestamp Date;
     private String eventID;
     private GeoPoint Local;
     private String Description;
 
     private EventsModel() {}
 
-    private EventsModel(String Title, String Hours, String Date, String eventID, GeoPoint Local, String Description){
+    private EventsModel(String Title, String Hours, Timestamp Date, String eventID, GeoPoint Local, String Description){
         this.Title = Title;
         this.Date  = Date;
         this.Hours = Hours;
@@ -27,11 +29,11 @@ public class EventsModel {
         this.Title = title;
     }
 
-    public String getDate() {
+    public Timestamp getDate() {
         return Date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.Date = date;
     }
 

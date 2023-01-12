@@ -85,7 +85,8 @@ public class EventSpecsFragment extends Fragment {
                 outputEventSpecs_Description.setText(value.getString("Description"));
                 outputEventSpecs_Capacity.setText(String.valueOf(Objects.requireNonNull(value.getLong("MaxCapacity")).intValue()));
                 outputEventSpecs_Duration.setText(value.getString("Duration"));
-                outputEventSpecs_Date.setText(value.getString("Date"));
+                //outputEventSpecs_Date.setText(("Date"));
+                System.out.println(value.getTimestamp("Date"));
 
                 creatorID = value.getString("CreatorID");
                 DocumentReference creatorReference = store.collection("Users").document(creatorID);
