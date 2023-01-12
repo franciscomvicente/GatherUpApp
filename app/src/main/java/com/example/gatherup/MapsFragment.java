@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.gatherup.Utils.ClusterManagerRenderer;
 import com.example.gatherup.Utils.ClusterMarker;
 import com.example.gatherup.Utils.EventsModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -170,9 +171,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         adapter = new FirestoreAdapter(options, this);
 
          */
-
-
-
         return view;
     }
 
@@ -200,6 +198,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
+
         }
 
         LatLng loc = new LatLng(latitude, longitude);
@@ -207,6 +206,8 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             markername.remove();
         }
         markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),13));
+
 
         if (location == null) {
             markername.remove();
