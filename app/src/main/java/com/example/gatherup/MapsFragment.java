@@ -229,7 +229,23 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     private void clickMarkers(){
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>(){
             public boolean onClusterItemClick(ClusterMarker clusterMarker) {
-                System.out.println(clusterMarker.getTitle());
+
+                String id = "";
+                for(EventsModel eventsModel : list){
+                    if(eventsModel.getTitle().equals(clusterMarker.getTitle())){
+                        id = eventsModel.getEventID();
+                        EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
+                        Bundle b = new Bundle();
+
+                        b.putString("key", "-NLb7vOXIr0WeTpS1CN8"); //Este ID é apenas um teste.
+
+                        eventSpecsFragment.setArguments(b);
+                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+                        break;
+                    }
+                }
+
                 return false;
             }
         });
@@ -254,6 +270,10 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                     String snippet = "";
                     snippet = eventLocation.getDescription() + "-" + eventLocation.getDate();
                     int avatar = R.drawable.ic_baseline_3p_24;
+                    System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
+                    System.out.println();
+                    System.out.println();
+                    System.out.println();
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
                     }catch (NumberFormatException e){
@@ -281,6 +301,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                     Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                 }
             }
+
 
             for(ClusterMarker clusterMarker : mClusterMarkers){
                 clickMarkers();
