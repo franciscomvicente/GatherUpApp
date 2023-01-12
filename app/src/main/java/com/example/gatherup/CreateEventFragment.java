@@ -245,12 +245,20 @@ public class CreateEventFragment extends Fragment {
 
         if (!(imageUri == null)) {
             uploadImageToFirebase(imageUri);
+        } else {
+            uploadDeafultImage();
         }
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
         StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
         file.putFile(imageUri);
+    }
+
+    private void uploadDeafultImage() {
+        StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
+        Uri image = Uri.parse("android.resource://com.example.gatherup/drawable/" + R.drawable.defaultimageevent);
+        file.putFile(image);
     }
 
     @Override

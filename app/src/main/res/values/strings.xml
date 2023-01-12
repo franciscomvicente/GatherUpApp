@@ -22,5 +22,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="join_event">Join Event</string>
     <string name="email">Email</string>
+    <string name="confirm_edition">Confirm Edition</string>
 
 </resources>
