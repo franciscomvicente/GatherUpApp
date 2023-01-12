@@ -61,7 +61,7 @@ public class EventsModel {
         this.Description = Description;
     }
 
-    public String geAddress() {
+    public String getAddress() {
         return Address;
     }
 

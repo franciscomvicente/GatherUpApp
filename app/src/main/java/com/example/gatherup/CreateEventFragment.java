@@ -292,7 +292,7 @@ public class CreateEventFragment extends Fragment {
         public void onActivityResult(ActivityResult result) {
             try {
                 AddressData addressData = result.getData().getParcelableExtra(Constants.ADDRESS_INTENT);
-                address = addressData.toString();
+                address = addressData.component3().get(0).getAddressLine(0);
                 longitude = addressData.getLongitude();
                 latitude = addressData.getLatitude();
                 inputCreateEvent_Local.setText(address);

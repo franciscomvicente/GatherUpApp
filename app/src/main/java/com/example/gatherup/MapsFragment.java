@@ -242,7 +242,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             for(EventsModel eventLocation: list){
                 try{
                     String snippet = "";
-                    snippet = eventLocation.getDescription() + "-" + eventLocation.getDate() + " at " + eventLocation.getHours();
+                    snippet = eventLocation.getDescription() + "-" + eventLocation.getDate();
                     int avatar = R.drawable.ic_baseline_3p_24;
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
