@@ -161,9 +161,14 @@ public class EventSpecsFragment extends Fragment {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    btnEvent.setText("Leave Event");
-                    btnEvent.setOnClickListener(v -> LeaveEvent(eventID));
-                    System.out.println("REGISTERED");
+                    if(creatorID.equals(userID)){
+                        btnEvent.setText("Edit Event");
+                        btnEvent.setOnClickListener(v -> EditEvent(eventID));
+                    } else {
+                        btnEvent.setText("Leave Event");
+                        btnEvent.setOnClickListener(v -> LeaveEvent(eventID));
+                        System.out.println("REGISTERED");
+                    }
                 } else {
                     btnEvent.setText("Join Event");
                     btnEvent.setOnClickListener(v -> JoinEvent(eventID));
