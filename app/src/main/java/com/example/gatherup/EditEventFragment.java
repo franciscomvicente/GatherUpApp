@@ -61,4 +61,8 @@ public class EditEventFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_edit_event, container, false);
     }
+
+    public void ConfirmEdition(View view) {
+        //Onclickzão para confirmar as edições efetuadas
+    }
 }

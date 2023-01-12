@@ -4,98 +4,177 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventSpecsFragment">
+    tools:context=".EditEventFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/Edit_EditEventSpecs_Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="Event Title"
-            android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EventSpecsCardView2" />
 
         <TextView
-            android:id="@+id/EditEventSpecs_Local"
+            android:id="@+id/txtEditEvent_EventImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="9dp"
-            android:justificationMode="inter_word"
-            android:text="Local"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/view"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Edit Event Photo"
+            app:layout_constraintBottom_toTopOf="@+id/divider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Edit_EditEventSpecs_Title" />
+            app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
-        <TextView
-            android:id="@+id/txtEditEvent_EventSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Event Settings"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditHost"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            app:cardCornerRadius="250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EditEventSpecs_Local" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/inputEditEvent_EventPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+        </androidx.cardview.widget.CardView>
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/divider2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/DarkBlue"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_EventSettings"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/EditEventSpecs_Local" />
-
-        <TextView
-            android:id="@+id/txtEditHost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
-            android:text="Host"
-            android:textColor="@color/black"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_EventTitle"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_EventSettings" />
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_EventImage" />
 
         <TextView
-            android:id="@+id/EditEventSpecs_Username"
+            android:id="@+id/txtEditEvent_EventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="username"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/EventSpecsCardView"
-            app:layout_constraintStart_toEndOf="@+id/EventSpecsCardView"
-            app:layout_constraintTop_toTopOf="@+id/EventSpecsCardView" />
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="Event Title"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_Description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_MaxCapacity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="8dp"
+            android:text="Max Capacity"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_PrivateEvent"
+            app:layout_constraintEnd_toStartOf="@+id/inputEditEvent_MaxCapacity"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Date"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Date" />
 
         <TextView
             android:id="@+id/txtEditEvent_Theme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Theme:"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditDescription"
-            app:layout_constraintStart_toStartOf="@+id/EventSpecsCardView"
-            app:layout_constraintTop_toBottomOf="@+id/EventSpecsCardView" />
+            android:layout_marginTop="24dp"
+            android:text="Theme"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_Local"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Description"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Description" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_Date"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginEnd="10dp"
+            android:text="Date"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_MaxCapacity"
+            app:layout_constraintEnd_toStartOf="@+id/inputEditEvent_Date"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Local"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Local" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_Duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Duration"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_MaxCapacity"
+            app:layout_constraintEnd_toStartOf="@+id/inputEditEvent_Duration" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_Hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Hours"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Date"
+            app:layout_constraintEnd_toStartOf="@+id/inputEditEvent_Hours" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_Local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="23dp"
+            android:text="Local"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_Date"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Theme"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Theme" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Description"
+            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_Theme"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_EventTitle"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_EventTitle" />
+
+        <TextView
+            android:id="@+id/txtEditEvent_PrivateEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Private"
+            app:layout_constraintBottom_toTopOf="@+id/btnEditEvent"
+            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_MaxCapacity"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_MaxCapacity" />
 
         <EditText
-            android:id="@+id/EditEventSpecs_Theme"
+            android:id="@+id/inputEditEvent_Title"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_EventTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_EventTitle" />
+
+        <NumberPicker
+            android:id="@+id/inputEditEvent_MaxCapacity"
+            android:layout_width="70dp"
+            android:layout_height="110dp"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:layout_marginHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtEditEvent_MaxCapacity"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_MaxCapacity"
+            app:layout_constraintTop_toTopOf="@+id/txtEditEvent_MaxCapacity" />
+
+        <EditText
+            android:id="@+id/inputEditEvent_Theme"
             style="@style/Inputs"
             android:layout_width="0dp"
             android:layout_height="30dp"
@@ -107,165 +186,99 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Theme" />
 
-        <TextView
-            android:id="@+id/txtEditDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Description:"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditCapacity"
-            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Theme"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Theme" />
-
         <EditText
-            android:id="@+id/EditEventSpecs_Description"
+            android:id="@+id/inputEditEvent_Date"
             style="@style/Inputs"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/fields_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditDescription"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtEditDescription" />
-
-        <TextView
-            android:id="@+id/txtEditCapacity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Capacity:"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditDate"
-            app:layout_constraintStart_toStartOf="@+id/txtEditDescription"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditDescription" />
-
-        <EditText
-            android:id="@+id/EditEventSpecs_Capacity"
-            style="@style/Inputs"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/fields_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditCapacity"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtEditCapacity" />
-
-        <TextView
-            android:id="@+id/txtEditDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Date:"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/txtEditEvent_Duration"
-            app:layout_constraintStart_toStartOf="@+id/txtEditCapacity"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditCapacity" />
-
-        <EditText
-            android:id="@+id/EditEventSpecs_Date"
-            style="@style/Inputs"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/fields_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditDate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtEditDate" />
-
-        <TextView
-            android:id="@+id/txtEditEvent_Duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Duration:"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toTopOf="@+id/btnEditEvent"
-            app:layout_constraintStart_toStartOf="@+id/txtEditDate"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditDate" />
-
-        <EditText
-            android:id="@+id/EditEventSpecs_Duration"
-            style="@style/Inputs"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_marginHorizontal="10dp"
-            android:background="@drawable/fields_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Duration"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Duration" />
-
-        <androidx.cardview.widget.CardView
-
-            android:id="@+id/EventSpecsCardView2"
             android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            app:cardCornerRadius="250dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Date"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Date" />
+
+        <NumberPicker
+            android:id="@+id/inputEditEvent_Duration"
+            android:layout_width="70dp"
+            android:layout_height="110dp"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:layout_marginHorizontal="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtEditEvent_Duration"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/txtEditEvent_Duration" />
 
-            <ImageView
-                android:id="@+id/EditEventSpecs_EventPhoto"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
+        <EditText
+            android:id="@+id/inputEditEvent_Hours"
+            style="@style/Inputs"
+            android:layout_width="75dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:focusableInTouchMode="false"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Hours"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <androidx.cardview.widget.CardView
+        <EditText
+            android:id="@+id/inputEditEvent_Local"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:focusableInTouchMode="false"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Local"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Local" />
 
-            android:id="@+id/EventSpecsCardView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="250dp"
-            app:layout_constraintEnd_toEndOf="@+id/txtEditHost"
-            app:layout_constraintStart_toStartOf="@+id/txtEditHost"
-            app:layout_constraintTop_toTopOf="@+id/txtEditHost">
+        <EditText
+            android:id="@+id/inputEditEvent_Description"
+            style="@style/Inputs"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Description" />
 
-            <ImageView
-                android:id="@+id/EditEventSpecs_UserPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-        </androidx.cardview.widget.CardView>
-
-
-        <ImageView
-            android:id="@+id/btnGroupChat"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/txtEditEvent_Duration"
-            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_Duration"
-            app:srcCompat="@drawable/ic_baseline_3p_24" />
+        <Switch
+            android:id="@+id/inputEditEvent_PrivateEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:switchMinWidth="65dp"
+            android:thumbTint="@drawable/thump"
+            android:trackTint="@drawable/track"
+            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_PrivateEvent"
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_PrivateEvent" />
 
         <Button
             android:id="@+id/btnEditEvent"
             style="@style/ButtonsFino"
-            android:layout_width="0dp"
-            android:layout_marginStart="54dp"
-            android:layout_marginEnd="54dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/buttons_bg"
-            app:layout_constraintBottom_toBottomOf="@+id/btnGroupChat"
+            android:onClick="ConfirmEdition"
+            android:text="@string/confirm_edition"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnGroupChat"
-            app:layout_constraintTop_toTopOf="@+id/btnGroupChat" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtEditEvent_PrivateEvent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>
