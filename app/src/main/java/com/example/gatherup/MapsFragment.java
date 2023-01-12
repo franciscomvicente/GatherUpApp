@@ -66,7 +66,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     Button listaEventosButton;
     private Location location;
 
-    private ClusterManager mClusterManager;
+    private ClusterManager<ClusterMarker> mClusterManager;
     private ClusterManagerRenderer mClusterManagerRenderer;
     private ArrayList<ClusterMarker> mClusterMarkers = new ArrayList<>();
 
@@ -226,6 +226,15 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    private void clickMarkers(){
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>(){
+            public boolean onClusterItemClick(ClusterMarker clusterMarker) {
+                System.out.println(clusterMarker.getTitle());
+                return false;
+            }
+        });
+    }
+
 
     private void addMapMarkers(){
         if(mMap != null){
@@ -271,6 +280,10 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                 }catch (NullPointerException e){
                     Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                 }
+            }
+
+            for(ClusterMarker clusterMarker : mClusterMarkers){
+                clickMarkers();
             }
 
             mClusterManager.cluster();
