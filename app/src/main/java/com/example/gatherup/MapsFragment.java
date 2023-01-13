@@ -280,7 +280,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                         //Log.d(TAG, "addMapMarkers; no avatar for: " + eventLocation.getUser().getUsername() + ", setting default");
                     }
 
-
                     ClusterMarker newClusterMarker = new ClusterMarker(
                             new LatLng(eventLocation.getLocal().getLatitude(), eventLocation.getLocal().getLongitude()),
                             eventLocation.getTitle(),
@@ -301,7 +300,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                 public void onClusterItemInfoWindowClick(ClusterMarker clusterMarker) {
                     String id;
                     for (EventsModel eventsModel : list) {
-                        if (eventsModel.getTitle().equals(clusterMarker.getTitle())) {
                             id = eventsModel.getEventID();
                             EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
                             Bundle b = new Bundle();
@@ -314,7 +312,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                             break;
                         }
                     }
-                }
             });
 
             mClusterManager.cluster();
