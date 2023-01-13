@@ -42,9 +42,9 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MapsFragment extends Fragment implements LocationListener, OnMapReadyCallback {
@@ -55,7 +55,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003;
 
     private FirebaseFirestore store;
-    private ArrayList<EventsModel> list= new ArrayList<>();
+    private ArrayList<EventsModel> list = new ArrayList<>();
 
     private GoogleMap mMap;
     LocationManager locationManager;
@@ -79,8 +79,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         }
     };
 
-    //NAO VERIFICA PERMISSOES, TIRAR DEPOIS
-    public void requestlocation(){
+    public void requestlocation() {
         checkLocationPermission();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
@@ -133,14 +132,15 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
          */
 
         Timestamp currentTime = Timestamp.now();
-        store.collection("Events").whereGreaterThan("Date",currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     System.out.println("TRY");
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d(TAG, document.getId() + " => " + document.getData());
                         EventsModel eventsModel = document.toObject(EventsModel.class);
+                        String eventID = document.getId();
+                        eventsModel.setEventID(eventID);
                         list.add(eventsModel);
                     }
                 } else {
@@ -207,7 +207,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             markername.remove();
         }
         markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
 
 
         if (location == null) {
@@ -226,18 +226,19 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    private void clickMarkers(){
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>(){
+    /* Codigo do cachao
+    private void clickMarkers() {
+        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>() {
             public boolean onClusterItemClick(ClusterMarker clusterMarker) {
 
-                String id = "";
-                for(EventsModel eventsModel : list){
-                    if(eventsModel.getTitle().equals(clusterMarker.getTitle())){
+                String id;
+                for (EventsModel eventsModel : list) {
+                    if (eventsModel.getTitle().equals(clusterMarker.getTitle())) {
                         id = eventsModel.getEventID();
                         EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
                         Bundle b = new Bundle();
 
-                        b.putString("key", "-NLb7vOXIr0WeTpS1CN8"); //Este ID é apenas um teste.
+                        b.putString("key", id);
 
                         eventSpecsFragment.setArguments(b);
                         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -251,13 +252,14 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         });
     }
 
+     */
 
-    private void addMapMarkers(){
-        if(mMap != null){
-            if(mClusterManager == null){
+    private void addMapMarkers() {
+        if (mMap != null) {
+            if (mClusterManager == null) {
                 mClusterManager = new ClusterManager<ClusterMarker>(getContext(), mMap);
             }
-            if(mClusterManagerRenderer == null){
+            if (mClusterManagerRenderer == null) {
                 mClusterManagerRenderer = new ClusterManagerRenderer(
                         getActivity(),
                         mMap,
@@ -265,47 +267,55 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                 );
                 mClusterManager.setRenderer(mClusterManagerRenderer);
             }
-            for(EventsModel eventLocation: list){
-                try{
+            for (EventsModel eventLocation : list) {
+                try {
                     String snippet = "";
-                    snippet = eventLocation.getDescription() + "-" + eventLocation.getDate();
+                    String date = toDate(eventLocation);
+                    snippet = eventLocation.getDescription() + " - " + date;
                     int avatar = R.drawable.ic_baseline_3p_24;
-                    System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
-                    System.out.println();
-                    System.out.println();
-                    System.out.println();
+                    //System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
-                    }catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         //Log.d(TAG, "addMapMarkers; no avatar for: " + eventLocation.getUser().getUsername() + ", setting default");
                     }
 
 
                     ClusterMarker newClusterMarker = new ClusterMarker(
-                            new LatLng(eventLocation.getLocal().getLatitude(), eventLocation.getLocal().getLongitude() ),
+                            new LatLng(eventLocation.getLocal().getLatitude(), eventLocation.getLocal().getLongitude()),
                             eventLocation.getTitle(),
                             snippet,
                             avatar
                     );
 
-
-
-
-
                     mClusterManager.addItem(newClusterMarker);
                     mClusterMarkers.add(newClusterMarker);
 
-
-
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                 }
             }
 
+            mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<ClusterMarker>() {
+                @Override
+                public void onClusterItemInfoWindowClick(ClusterMarker clusterMarker) {
+                    String id;
+                    for (EventsModel eventsModel : list) {
+                        if (eventsModel.getTitle().equals(clusterMarker.getTitle())) {
+                            id = eventsModel.getEventID();
+                            EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
+                            Bundle b = new Bundle();
 
-            for(ClusterMarker clusterMarker : mClusterMarkers){
-                clickMarkers();
-            }
+                            b.putString("key", id);
+
+                            eventSpecsFragment.setArguments(b);
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+                            break;
+                        }
+                    }
+                }
+            });
 
             mClusterManager.cluster();
 
@@ -404,4 +414,12 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     });
 
      */
+
+    private String toDate(EventsModel value){
+        Timestamp timestamp = value.getDate();
+        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String time = sfd.format(timestamp.toDate());
+
+        return (String) time;
+    }
 }

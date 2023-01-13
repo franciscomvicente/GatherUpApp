@@ -50,7 +50,6 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
             @Override
             public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                System.out.println("1");
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
                 return eventsModel;

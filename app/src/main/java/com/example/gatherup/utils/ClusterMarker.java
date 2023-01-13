@@ -18,7 +18,6 @@ public class ClusterMarker implements ClusterItem {
     }
 
     public ClusterMarker() {
-
     }
 
     @Override
