@@ -70,6 +70,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_profile, container, false);
+
         setHasOptionsMenu(true);
 
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
