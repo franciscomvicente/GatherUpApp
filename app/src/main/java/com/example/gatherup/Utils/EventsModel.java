@@ -68,4 +68,5 @@ public class EventsModel {
     public void setAddress(String Address) {
         this.Address = Address;
     }
+
 }

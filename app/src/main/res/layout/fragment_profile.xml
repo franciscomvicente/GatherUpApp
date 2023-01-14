@@ -42,19 +42,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-        <ListView
-            android:id="@+id/listaEventos"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewAllEvents"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/fields_bg"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerViewHostEvents"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/outputSBio" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewHostEvents"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="1dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/fields_bg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/outputSBio"/>
-
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewAllEvents" />
 
         <TextView
             android:id="@+id/outputSBio"
@@ -72,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/DarkBlue"
-            app:layout_constraintBottom_toTopOf="@+id/listaEventos"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerViewHostEvents"
             android:layout_marginBottom="10dp"/>
 
 
