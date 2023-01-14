@@ -1,23 +1,11 @@
 package com.example.gatherup;
 
-import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.metrics.Event;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.paging.PagingConfig;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +14,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.paging.PagingConfig;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gatherup.Utils.EventsModel;
 import com.example.gatherup.Utils.FirestoreAdapter;
 import com.firebase.ui.firestore.SnapshotParser;
@@ -33,7 +29,6 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -49,14 +44,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.nio.charset.StandardCharsets;
-import java.sql.Array;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnListItemClicked{
 
@@ -75,9 +63,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
     private FirestoreAdapter adapter;
     RecyclerView recyclerView2;
     private FirestoreAdapter adapter2;
-    ArrayList<String> eventIDs = new ArrayList<>();
-    ArrayList<Query> queries = new ArrayList<>();
-    Timestamp currentTime = Timestamp.now();
+    ArrayList<String> eventIDs;
 
     public static final String SHARED_PREFS = "sharedPrefs";
 
@@ -91,6 +77,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
         outputUsername = view.findViewById(R.id.outputUsername);
         outputBio = view.findViewById(R.id.outputBio);
         outputProfilePhoto = view.findViewById(R.id.outputProfilePhoto);
+        eventIDs = new ArrayList<>();
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -123,10 +110,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
             ft.replace(R.id.MainFragment, editProfileFragment).commit();
         });
 
-
-
-
-
         //RecyclerView eventosQueParticipa
         recyclerView = view.findViewById(R.id.listaEventos);
         System.out.println("Antes");
@@ -140,9 +123,12 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         System.out.println("document.getData(): " + document.getData());
                         String eventReference = document.getId();
-                        eventIDs.add(eventReference);
-                        System.out.println(eventReference);
+                        if(eventIDs.size() < 10) {
+                            eventIDs.add(eventReference);
+                            System.out.println(eventReference);
+                        }
                     }
+                    System.out.println(eventIDs);
                     getIds();
                 } else {
                     Log.d("TAG", "Error getting event references: ", task.getException());
@@ -157,10 +143,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
         //QUERY Meus Eventos
         System.out.println("AS QUERIES COMEÇAM AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        Query query2 = store.collection("Events").whereEqualTo("CreatorID", userID)
-        ;
-
-
+        Query query2 = store.collection("Events").whereEqualTo("CreatorID", userID);
 
         PagingConfig config2 = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
@@ -170,7 +153,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
             @Override
             public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                System.out.println("2");
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
                 return eventsModel;
@@ -190,7 +172,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
         if(!eventIDs.isEmpty()){
             Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs);
 
-
             PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
             //PAGING OPTIONS
@@ -199,7 +180,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
                 @Override
                 public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                     EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                    System.out.println("1");
                     String eventID = snapshot.getId();
                     eventsModel.setEventID(eventID);
                     return eventsModel;
@@ -214,8 +194,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
     }
 
-
-
     private void PerformLogout() {
         SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -225,7 +203,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
         Intent intent = new Intent(getContext(),LoginActivity.class);
         startActivity(intent);
     }
-
 
     @Override
     public void onItemClick(DocumentSnapshot snapshot, int position) {

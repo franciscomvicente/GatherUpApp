@@ -1,5 +1,7 @@
 package com.example.gatherup.Utils;
 
+import android.net.Uri;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -8,13 +10,15 @@ public class ClusterMarker implements ClusterItem {
     private LatLng position;
     private String title;
     private String snippet;
-    private int iconPicture;
+    private Uri iconPicture;
+    private String eventID;
 
-    public ClusterMarker(LatLng position, String title, String snippet, int iconPicture) {
+    public ClusterMarker(LatLng position, String title, String snippet, Uri iconPicture, String eventID) {
         this.position = position;
         this.title = title;
         this.snippet = snippet;
         this.iconPicture = iconPicture;
+        this.eventID= eventID;
     }
 
     public ClusterMarker() {
@@ -47,12 +51,20 @@ public class ClusterMarker implements ClusterItem {
         this.snippet = snippet;
     }
 
-    public int getIconPicture() {
+    public Uri getIconPicture() {
         return iconPicture;
     }
 
-    public void setIconPicture(int iconPicture) {
+    public void setIconPicture(Uri iconPicture) {
         this.iconPicture = iconPicture;
+    }
+
+    public String getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(String eventID) {
+        this.eventID = eventID;
     }
 
 }

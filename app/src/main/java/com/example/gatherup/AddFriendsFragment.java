@@ -20,7 +20,10 @@ import com.example.gatherup.Utils.FindFriendsAdapter;
 import com.example.gatherup.Utils.FindFriendsModel;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -33,6 +36,9 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
     private FindFriendsAdapter adapter;
     private Query query;
     private PagingConfig config;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,8 +47,11 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
         inputPeople = view.findViewById(R.id.inputPeople);
         outputPeople = view.findViewById(R.id.outputPeople);
         store = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userID = user.getUid();
 
-        query = store.collection("Users");
+        query = store.collection("Users").whereNotEqualTo(FieldPath.documentId(), userID);
 
         inputPeople.addTextChangedListener(new TextWatcher() {
             @Override

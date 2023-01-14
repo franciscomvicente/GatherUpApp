@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.text.SimpleDateFormat;
@@ -65,6 +68,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     Marker markername;
     Button listaEventosButton;
     private Location location;
+    private StorageReference storageReference;
 
     private ClusterManager<ClusterMarker> mClusterManager;
     private ClusterManagerRenderer mClusterManagerRenderer;
@@ -101,6 +105,7 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
 
         listaEventosButton = view.findViewById(R.id.ListButton);
         store = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         listaEventosButton.setOnClickListener(view1 -> {
             Fragment eventListFragment = new EventListFragment();
@@ -270,21 +275,22 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             for (EventsModel eventLocation : list) {
                 try {
                     String snippet = "";
+                    Uri avatar = null;
                     String date = toDate(eventLocation);
                     snippet = eventLocation.getDescription() + " - " + date;
-                    int avatar = R.drawable.ic_baseline_3p_24;
+
                     //System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
                     } catch (NumberFormatException e) {
                         //Log.d(TAG, "addMapMarkers; no avatar for: " + eventLocation.getUser().getUsername() + ", setting default");
                     }
-
                     ClusterMarker newClusterMarker = new ClusterMarker(
                             new LatLng(eventLocation.getLocal().getLatitude(), eventLocation.getLocal().getLongitude()),
                             eventLocation.getTitle(),
                             snippet,
-                            avatar
+                            avatar,
+                            eventLocation.getEventID()
                     );
 
                     mClusterManager.addItem(newClusterMarker);
@@ -298,20 +304,16 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<ClusterMarker>() {
                 @Override
                 public void onClusterItemInfoWindowClick(ClusterMarker clusterMarker) {
-                    String id;
-                    for (EventsModel eventsModel : list) {
-                            id = eventsModel.getEventID();
-                            EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
-                            Bundle b = new Bundle();
+                    String id = clusterMarker.getEventID();
+                    EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
+                    Bundle b = new Bundle();
 
-                            b.putString("key", id);
+                    b.putString("key", id);
 
-                            eventSpecsFragment.setArguments(b);
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
-                            break;
-                        }
-                    }
+                    eventSpecsFragment.setArguments(b);
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+                }
             });
 
             mClusterManager.cluster();
@@ -412,11 +414,12 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
 
      */
 
-    private String toDate(EventsModel value){
+    private String toDate(EventsModel value) {
         Timestamp timestamp = value.getDate();
         SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String time = sfd.format(timestamp.toDate());
 
         return (String) time;
     }
+
 }

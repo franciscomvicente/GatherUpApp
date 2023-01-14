@@ -151,7 +151,6 @@ public class EventSpecsFragment extends Fragment {
     }
 
     private void EditEvent(String eventID){
-
         EditEventFragment editEventFragment = new EditEventFragment();
         Bundle b = new Bundle();
         b.putString("key", eventID);
