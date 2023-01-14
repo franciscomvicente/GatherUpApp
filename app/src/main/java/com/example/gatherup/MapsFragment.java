@@ -141,7 +141,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    System.out.println("TRY");
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         EventsModel eventsModel = document.toObject(EventsModel.class);
                         String eventID = document.getId();

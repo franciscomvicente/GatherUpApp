@@ -73,13 +73,13 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
         });
 
         config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-
         FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {
             @NonNull
             @Override
             public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
                 String userID = snapshot.getId();
+                System.out.println(userID);
                 findFriendsModel.setUserID(userID);
                 return findFriendsModel;
             }
@@ -119,5 +119,6 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
     }
+
 
 }
