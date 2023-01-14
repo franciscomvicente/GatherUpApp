@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.metrics.Event;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -38,6 +39,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -47,7 +49,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import org.checkerframework.checker.units.qual.A;
+
+import java.nio.charset.StandardCharsets;
+import java.sql.Array;
 import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnListItemClicked{
 
@@ -66,7 +75,9 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
     private FirestoreAdapter adapter;
     RecyclerView recyclerView2;
     private FirestoreAdapter adapter2;
-
+    ArrayList<String> eventIDs = new ArrayList<>();
+    ArrayList<Query> queries = new ArrayList<>();
+    Timestamp currentTime = Timestamp.now();
 
     public static final String SHARED_PREFS = "sharedPrefs";
 
@@ -114,55 +125,31 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
 
 
-        Timestamp currentTime = Timestamp.now();
+
 
         //RecyclerView eventosQueParticipa
         recyclerView = view.findViewById(R.id.listaEventos);
         System.out.println("Antes");
-        Query query = store.collection("Users").document(userID).collection("Events").whereGreaterThanOrEqualTo("Date", currentTime);
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+        Query queryAux = store.collection("Users").document(userID).collection("Events");
+
+        queryAux.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        // Get the event reference
-                        String eventRef = document.getString("eventRef");
-                        // Use the reference to retrieve the actual event data
-                        store.document(eventRef).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    EventsModel event = task.getResult().toObject(EventsModel.class);
-                                    // Do something with the event data
-                                }
-                            }
-                        });
+                        System.out.println("document.getData(): " + document.getData());
+                        String eventReference = document.getId();
+                        eventIDs.add(eventReference);
+                        System.out.println(eventReference);
                     }
+                    getIds();
+                } else {
+                    Log.d("TAG", "Error getting event references: ", task.getException());
                 }
+
             }
         });
-
-        System.out.println("Depois");
-        PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-
-        //PAGING OPTIONS
-        FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<EventsModel>() {
-            @NonNull
-            @Override
-            public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                System.out.println("1");
-                String eventID = snapshot.getId();
-                eventsModel.setEventID(eventID);
-                return eventsModel;
-            }
-        }).build();
-
-        adapter = new FirestoreAdapter(options, this);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
-
 
         //RecyclerView meusEventos
         recyclerView2 = view.findViewById(R.id.meusEventos);
@@ -170,7 +157,8 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
         //QUERY Meus Eventos
         System.out.println("AS QUERIES COMEÇAM AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        Query query2 = store.collection("Events").whereEqualTo("CreatorID", userID);
+        Query query2 = store.collection("Events").whereEqualTo("CreatorID", userID)
+        ;
 
 
 
@@ -182,7 +170,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
             @Override
             public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                System.out.println("1");
+                System.out.println("2");
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
                 return eventsModel;
@@ -197,6 +185,36 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
         return view;
     }
+
+    private void getIds(){
+        if(!eventIDs.isEmpty()){
+            Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs);
+
+
+            PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+
+            //PAGING OPTIONS
+            FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<EventsModel>() {
+                @NonNull
+                @Override
+                public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                    EventsModel eventsModel = snapshot.toObject(EventsModel.class);
+                    System.out.println("1");
+                    String eventID = snapshot.getId();
+                    eventsModel.setEventID(eventID);
+                    return eventsModel;
+                }
+            }).build();
+
+            adapter = new FirestoreAdapter(options, this);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(adapter);
+        }
+
+    }
+
+
 
     private void PerformLogout() {
         SharedPreferences sharedPreferences = this.getContext().getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);

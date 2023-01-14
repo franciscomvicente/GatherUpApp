@@ -152,6 +152,12 @@ public class EventSpecsFragment extends Fragment {
 
     private void EditEvent(String eventID){
 
+        EditEventFragment editEventFragment = new EditEventFragment();
+        Bundle b = new Bundle();
+        b.putString("key", eventID);
+        editEventFragment.setArguments(b);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.MainFragment, editEventFragment).addToBackStack("teste").commit();
     }
 
     private void CheckRegistered(String eventID){
