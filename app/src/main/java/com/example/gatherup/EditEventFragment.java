@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,6 +51,8 @@ import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.MapType;
 import com.sucho.placepicker.PlacePicker;
 
+import org.w3c.dom.Document;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,7 +63,7 @@ import java.util.Objects;
 
 public class EditEventFragment extends Fragment {
 
-    Button btnConfirmEdit;
+    Button btnConfirmEdit, btnDeleteEvent;
     ImageView btnGroupChat, inputEventsSpecs_EventPhoto, inputEventsSpecs_UserPhoto;
     TextView inputEventSpecs_Title, inputEventSpecs_Local, inputEventSpecs_Username, inputEventSpecs_Theme,
             inputEventSpecs_Description, inputEventSpecs_Date, inputEditEvent_Hours;
@@ -165,7 +168,7 @@ public class EditEventFragment extends Fragment {
 
         inputEventSpecs_Local.setOnClickListener(v -> localPicker());
 
-
+        DeleteEvent();
 
         return view;
     }
@@ -173,6 +176,7 @@ public class EditEventFragment extends Fragment {
     public void associateLayoutElements(View view){
         btnConfirmEdit = view.findViewById(R.id.btnEditEvent);
         btnGroupChat= view.findViewById(R.id.btnGroupChat);
+        btnDeleteEvent = view.findViewById(R.id.btnDeleteEvent);
         inputEventsSpecs_EventPhoto = view.findViewById(R.id.inputEditEvent_EventPhoto);
         //inputEventsSpecs_UserPhoto = view.findViewById(R.id.inputEditEvent_UserPhoto);
         inputEventSpecs_Title = view.findViewById(R.id.inputEditEvent_Title);
@@ -364,5 +368,14 @@ public class EditEventFragment extends Fragment {
         }
 
     });
+
+    private void DeleteEvent(){
+        btnDeleteEvent.setOnClickListener((view -> {
+            store.collection("Events").document(eventID).delete();
+            MyProfileFragment myProfileFragment = new MyProfileFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainFragment, myProfileFragment).commit(); // addToBackStack(null) back to last fragment with bugs
+        }));
+    }
 }
 

@@ -23,5 +23,6 @@
     <string name="join_event">Join Event</string>
     <string name="email">Email</string>
     <string name="confirm_edition">Confirm Edition</string>
+    <string name="delete">Delete</string>
 
 </resources>
