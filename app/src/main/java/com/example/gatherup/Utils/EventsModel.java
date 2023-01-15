@@ -12,10 +12,11 @@ public class EventsModel {
     private GeoPoint Local;
     private String Description;
     private Location Location;
+    private String Distance;
 
     private EventsModel() {}
 
-    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location){
+    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance){
         this.Title = Title;
         this.Date  = Date;
         this.eventID = eventID;
@@ -23,6 +24,7 @@ public class EventsModel {
         this.Description = Description;
         this.Address = Address;
         this.Location = Location;
+        this.Distance = Distance;
     }
 
     public String getTitle(){
@@ -79,6 +81,14 @@ public class EventsModel {
 
     public void setLocation(Location Location) {
         this.Location = Location;
+    }
+
+    public String getDistance() {
+        return Distance;
+    }
+
+    public void setDistance(String Distance) {
+        this.Distance = Distance;
     }
 
 }

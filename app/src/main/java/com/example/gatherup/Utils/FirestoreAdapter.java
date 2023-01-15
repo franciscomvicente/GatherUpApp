@@ -33,7 +33,7 @@ public class FirestoreAdapter extends FirestorePagingAdapter<EventsModel, Firest
         holder.list_title.setText(model.getTitle());
         holder.list_date.setText(array[0]);
         holder.list_hour.setText(array[1]);
-        holder.list_distance.setText(distance(model.getLocation(),model.getLocal()));
+        holder.list_distance.setText(model.getDistance());
     }
 
     @NonNull

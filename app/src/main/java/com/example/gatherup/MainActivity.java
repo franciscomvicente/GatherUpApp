@@ -90,6 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     @Override
     public void onProviderEnabled(String provider) {
         System.out.println("Liguei O GPS");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(provider, 10, 100, this);
+        mCurrentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
 
     @Override

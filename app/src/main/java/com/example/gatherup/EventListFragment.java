@@ -21,18 +21,15 @@ import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
-public class EventListFragment extends Fragment implements FirestoreAdapter.OnListItemClicked{
+public class EventListFragment extends Fragment implements FirestoreAdapter.OnListItemClicked {
 
     private FirebaseFirestore store;
     private RecyclerView outputEvents;
 
     private FirestoreAdapter adapter;
-
-
-    private Double latitude;
-    private Double longitude;
     private Location location;
 
     @Override
@@ -49,7 +46,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         Timestamp currentTime = Timestamp.now();
 
         //QUERY
-        Query query = store.collection("Events").whereGreaterThan("Date",currentTime);
+        Query query = store.collection("Events").orderBy("Date").whereGreaterThan("Date", currentTime);
 
         PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
@@ -61,9 +58,11 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
+                eventsModel.setDistance(distance(location, eventsModel.getLocal()));
                 eventsModel.setLocation(location);
                 return eventsModel;
             }
+
         }).build();
 
         adapter = new FirestoreAdapter(options, this);
@@ -77,7 +76,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
     @Override
     public void onItemClick(DocumentSnapshot snapshot, int position) {
-        Log.d("ItemCLIECK","ItemCLicked" + position + "AND THE ID:" + snapshot.getId());
+        Log.d("ItemCLIECK", "ItemCLicked" + position + "AND THE ID:" + snapshot.getId());
 
         EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
         Bundle b = new Bundle();
@@ -86,5 +85,28 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         eventSpecsFragment.setArguments(b);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+    }
+
+    private String distance(Location location, GeoPoint local) {
+        String distancia = " ";
+        float dist;
+        if(location != null) {
+            android.location.Location location1 = new android.location.Location("provider");
+            location1.setLatitude(location.getLatitude());
+            location1.setLongitude(location.getLongitude());
+
+            android.location.Location location2 = new android.location.Location("provider");
+            location2.setLatitude(local.getLatitude());
+            location2.setLongitude(local.getLongitude());
+            dist = location1.distanceTo(location2);
+            dist = Math.round(dist * 10) / 10.0f;
+            distancia = dist + "M";
+            if (dist > 999) {
+                dist = dist / 1000;
+                dist = Math.round(dist * 10) / 10.0f;
+                distancia = dist + "Km";
+            }
+        }
+        return distancia;
     }
 }

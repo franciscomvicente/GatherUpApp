@@ -6,6 +6,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +44,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -48,7 +54,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class MapsFragment extends Fragment implements /*LocationListener, */ OnMapReadyCallback, MainActivity.LocationCallback {
+public class MapsFragment extends Fragment implements /*LocationListener, */ OnMapReadyCallback, MainActivity.LocationCallback, SensorEventListener {
 
     private static final String TAG = "Teste";
     public static final int ERROR_DIALOG_REQUEST = 9001;
@@ -56,7 +62,8 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
     public static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003;
 
     private FirebaseFirestore store;
-    private ArrayList<EventsModel> list = new ArrayList<>();
+    private ArrayList<EventsModel> list;
+    private ArrayList<EventsModel> shownevents;
 
     private GoogleMap mMap;
     private static final int REQUEST_CHECK_SETTINGS = 100;
@@ -72,6 +79,14 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
     private ClusterManager<ClusterMarker> mClusterManager;
     private ClusterManagerRenderer mClusterManagerRenderer;
     private ArrayList<ClusterMarker> mClusterMarkers = new ArrayList<>();
+
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
+    private long mLastShakeTimestamp;
+    private static final int SHAKE_TIME_LAPSE = 8000;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -110,6 +125,14 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
         MainActivity activity = (MainActivity) getActivity();
         activity.setCallback(this);
 
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (mMap != null) {
+            mMap.clear();
+        }
+        list = new ArrayList<>();
+
         listaEventosButton = view.findViewById(R.id.ListButton);
         focusMeButton = view.findViewById(R.id.FocusMeButton);
         store = FirebaseFirestore.getInstance();
@@ -144,6 +167,7 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
+                shownevents = list;
                 addMapMarkers();
             }
         });
@@ -174,11 +198,13 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
         } else {
             Log.d("MapFragment", "Location not available");
         }
+
+        UpdateDistance();
+
         if (mMap != null) {
             DisplayLocation();
         }
     }
-
 
     /*
     @Override
@@ -236,7 +262,7 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
                 );
                 mClusterManager.setRenderer(mClusterManagerRenderer);
             }
-            for (EventsModel eventLocation : list) {
+            for (EventsModel eventLocation : shownevents) {
                 try {
                     String snippet = "";
                     Uri avatar = null;
@@ -282,7 +308,6 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
             mClusterManager.cluster();
         }
     }
-
 
     /*
     private boolean checkMapServices() {
@@ -384,4 +409,98 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
 
         }
     }
+
+    private String distance(Location location, GeoPoint local) {
+        String distancia;
+        float dist;
+        android.location.Location location1 = new android.location.Location("provider");
+        location1.setLatitude(location.getLatitude());
+        location1.setLongitude(location.getLongitude());
+
+        android.location.Location location2 = new android.location.Location("provider");
+        location2.setLatitude(local.getLatitude());
+        location2.setLongitude(local.getLongitude());
+        dist = location1.distanceTo(location2);
+        dist = Math.round(dist * 10) / 10.0f;
+        distancia = dist + "M";
+        if (dist > 999) {
+            dist = dist / 1000;
+            dist = Math.round(dist * 10) / 10.0f;
+            distancia = dist + "Km";
+        }
+        return distancia;
+    }
+
+    private void UpdateDistance() {
+        for (EventsModel eventsModel : list) {
+            eventsModel.setDistance(distance(location, eventsModel.getLocal()));
+        }
+    }
+
+    private void deletemarkers() {
+        mMap.clear();
+        DisplayLocation();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+        mAccelLast = mAccelCurrent;
+        mAccelCurrent = (float) Math.sqrt((double) (x * x + y * y + z * z));
+        float delta = mAccelCurrent - mAccelLast;
+        mAccel = mAccel * 0.9f + delta;
+        if (mAccel > 18) {
+            long currentTimestamp = System.currentTimeMillis();
+            if (currentTimestamp - mLastShakeTimestamp > SHAKE_TIME_LAPSE) {
+                mLastShakeTimestamp = currentTimestamp;
+                Toast.makeText(getContext(), "Events within 3Km", Toast.LENGTH_SHORT).show();
+                EventsShow();
+            } else{
+                Toast.makeText(getContext(), "Wait a few until shake again", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
+    }
+
+    private void EventsShow(){
+        UpdateDistance();
+        shownevents = new ArrayList<>();
+        for(EventsModel eventsModel: list){
+            String distance = eventsModel.getDistance();
+            String[] parts = distance.split("[a-zA-Z]+");
+            double distanceNumber = Double.parseDouble(parts[0]);
+            String letter = distance.replace(parts[0], "").trim();
+            if (letter.equals("Km")) {
+                if (distanceNumber < 3){
+                    shownevents.add(eventsModel);
+                }
+            } else if (letter.equals("M")) {
+                if(distanceNumber < 3000){
+                    shownevents.add(eventsModel);
+                }
+            }
+        }
+        deletemarkers();
+        addMapMarkers();
+        FocusMe();
+    }
+
 }
