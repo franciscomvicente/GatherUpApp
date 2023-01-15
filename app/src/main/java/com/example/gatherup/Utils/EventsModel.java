@@ -1,5 +1,7 @@
 package com.example.gatherup.Utils;
 
+import android.location.Location;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -9,16 +11,18 @@ public class EventsModel {
     private String eventID;
     private GeoPoint Local;
     private String Description;
+    private Location Location;
 
     private EventsModel() {}
 
-    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address){
+    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location){
         this.Title = Title;
         this.Date  = Date;
         this.eventID = eventID;
         this.Local = Local;
         this.Description = Description;
         this.Address = Address;
+        this.Location = Location;
     }
 
     public String getTitle(){
@@ -67,6 +71,14 @@ public class EventsModel {
 
     public void setAddress(String Address) {
         this.Address = Address;
+    }
+
+    public Location getLocation() {
+        return Location;
+    }
+
+    public void setLocation(Location Location) {
+        this.Location = Location;
     }
 
 }

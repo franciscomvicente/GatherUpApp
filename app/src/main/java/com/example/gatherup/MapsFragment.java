@@ -1,15 +1,12 @@
 package com.example.gatherup;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +36,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -50,7 +48,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class MapsFragment extends Fragment implements LocationListener, OnMapReadyCallback {
+public class MapsFragment extends Fragment implements /*LocationListener, */ OnMapReadyCallback, MainActivity.LocationCallback {
 
     private static final String TAG = "Teste";
     public static final int ERROR_DIALOG_REQUEST = 9001;
@@ -61,12 +59,13 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     private ArrayList<EventsModel> list = new ArrayList<>();
 
     private GoogleMap mMap;
-    LocationManager locationManager;
     private static final int REQUEST_CHECK_SETTINGS = 100;
-    public double latitude;
-    public double longitude;
+    public Double latitude;
+    public Double longitude;
+    private boolean flagLocation = false;
     Marker markername;
     Button listaEventosButton;
+    FloatingActionButton focusMeButton;
     private Location location;
     private StorageReference storageReference;
 
@@ -78,19 +77,24 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            requestlocation();
-            //LatLng sydney = new LatLng(38.756829, -9.155290);
+            if (location != null) {
+                DisplayLocation();
+            }
+            //requestlocation();
         }
     };
 
+    /*
     public void requestlocation() {
         checkLocationPermission();
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, (LocationListener) this);
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         DisplayLocation(location);
     }
+
+     */
 
     public void checkLocationPermission() { //TESTE verificar o que faz
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -103,38 +107,28 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
         setHasOptionsMenu(true);
 
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setCallback(this);
+
         listaEventosButton = view.findViewById(R.id.ListButton);
+        focusMeButton = view.findViewById(R.id.FocusMeButton);
         store = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
         listaEventosButton.setOnClickListener(view1 -> {
             Fragment eventListFragment = new EventListFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("last_known_location", location);
+            eventListFragment.setArguments(bundle);
+
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
 
-        /*
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Events");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
-                list.clear();
-                System.out.println("1");
-                for(DataSnapshot snapshot: datasnapshot.getChildren()){
-                    EventsModel eventsModel = snapshot.getValue(EventsModel.class);
-                    list.add(eventsModel);
-                    System.out.println("2");
-                    addMapMarkers();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
+        focusMeButton.setOnClickListener(v -> {
+            FocusMe();
         });
-
-         */
 
         Timestamp currentTime = Timestamp.now();
         store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -153,29 +147,6 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                 addMapMarkers();
             }
         });
-
-
-        /*
-        Query query = store.collection("Events");
-
-        PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-
-        //PAGING OPTIONS
-        FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<EventsModel>() {
-            @NonNull
-            @Override
-            public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                System.out.println("1");
-                String eventID = snapshot.getId();
-                eventsModel.setEventID(eventID);
-                return eventsModel;
-            }
-        }).build();
-
-        adapter = new FirestoreAdapter(options, this);
-
-         */
         return view;
     }
 
@@ -189,6 +160,28 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
     }
 
     @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location currentLocation) {
+        location = currentLocation;
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            Log.d("MapFragment", "Latitude: " + latitude + " Longitude: " + longitude);
+        } else {
+            Log.d("MapFragment", "Location not available");
+        }
+        if (mMap != null) {
+            DisplayLocation();
+        }
+    }
+
+
+    /*
+    @Override
     public void onLocationChanged(@NonNull Location location) {
         markername.remove();
         latitude = location.getLatitude();
@@ -197,28 +190,28 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         DisplayLocation(location);
     }
 
-    @SuppressLint("MissingPermission")
-    public void DisplayLocation(Location location) {
+     */
 
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-
-        }
-
+    public void DisplayLocation() {
         LatLng loc = new LatLng(latitude, longitude);
         if (markername != null) {
             markername.remove();
         }
-        markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
 
-
+        if (latitude != null && longitude != null) {
+            try {
+                markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
+                if (!flagLocation) {
+                    FocusMe();
+                    flagLocation = true;
+                }
+            } catch (Exception e) {
+                System.out.println("Errei " + e); //ERRO
+            }
+        }
         if (location == null) {
             markername.remove();
         }
-
-
     }
 
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
@@ -230,38 +223,10 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-    /* Codigo do cachao
-    private void clickMarkers() {
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<ClusterMarker>() {
-            public boolean onClusterItemClick(ClusterMarker clusterMarker) {
-
-                String id;
-                for (EventsModel eventsModel : list) {
-                    if (eventsModel.getTitle().equals(clusterMarker.getTitle())) {
-                        id = eventsModel.getEventID();
-                        EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
-                        Bundle b = new Bundle();
-
-                        b.putString("key", id);
-
-                        eventSpecsFragment.setArguments(b);
-                        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
-                        break;
-                    }
-                }
-
-                return false;
-            }
-        });
-    }
-
-     */
-
     private void addMapMarkers() {
         if (mMap != null) {
             if (mClusterManager == null) {
-                mClusterManager = new ClusterManager<ClusterMarker>(getContext(), mMap);
+                mClusterManager = new ClusterManager<ClusterMarker>(requireContext(), mMap); //getContext() <- requireContext()
             }
             if (mClusterManagerRenderer == null) {
                 mClusterManagerRenderer = new ClusterManagerRenderer(
@@ -314,19 +279,10 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
                     ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
                 }
             });
-
             mClusterManager.cluster();
-
         }
     }
 
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
-        requestlocation();
-        //LatLng sydney = new LatLng(38.756829, -9.155290);
-    }
 
     /*
     private boolean checkMapServices() {
@@ -421,4 +377,11 @@ public class MapsFragment extends Fragment implements LocationListener, OnMapRea
         return (String) time;
     }
 
+    private void FocusMe() {
+        if (mMap != null && latitude != null && longitude != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
+        } else {
+
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.gatherup;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +30,18 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
     private FirestoreAdapter adapter;
 
+
+    private Double latitude;
+    private Double longitude;
+    private Location location;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
+
+        if (getArguments() != null) {
+            location = getArguments().getParcelable("last_known_location");
+        }
 
         outputEvents = view.findViewById(R.id.outputEvents);
         store = FirebaseFirestore.getInstance();
@@ -40,7 +50,6 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
         //QUERY
         Query query = store.collection("Events").whereGreaterThan("Date",currentTime);
-        System.out.println(currentTime);
 
         PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
@@ -52,6 +61,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
                 EventsModel eventsModel = snapshot.toObject(EventsModel.class);
                 String eventID = snapshot.getId();
                 eventsModel.setEventID(eventID);
+                eventsModel.setLocation(location);
                 return eventsModel;
             }
         }).build();
