@@ -8,6 +8,20 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.NumberPicker;
+import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -17,26 +31,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.NumberPicker;
-import android.widget.Switch;
-import android.widget.TextView;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -51,8 +50,6 @@ import com.sucho.placepicker.Constants;
 import com.sucho.placepicker.MapType;
 import com.sucho.placepicker.PlacePicker;
 
-import org.w3c.dom.Document;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -64,19 +61,20 @@ import java.util.Objects;
 public class EditEventFragment extends Fragment {
 
     Button btnConfirmEdit, btnDeleteEvent;
-    ImageView btnGroupChat, inputEventsSpecs_EventPhoto, inputEventsSpecs_UserPhoto;
-    TextView inputEventSpecs_Title, inputEventSpecs_Local, inputEventSpecs_Username, inputEventSpecs_Theme,
-            inputEventSpecs_Description, inputEventSpecs_Date, inputEditEvent_Hours;
+    ImageView btnGroupChat, inputEventsSpecs_EventPhoto;
+    TextView inputEventSpecs_Title, inputEventSpecs_Local, inputEventSpecs_Description, inputEventSpecs_Date, inputEditEvent_Hours;
     NumberPicker inputEventSpecs_Capacity, inputEventSpecs_Duration;
     Switch inputEditEvent_PrivateEvent;
+    Spinner inputEventSpecs_Theme;
 
     FirebaseAuth auth;
     FirebaseUser user;
     FirebaseFirestore store;
     String userID;
-    String creatorID;
 
     String pickerVals[];
+    private String[] spinnerVals;
+    private ArrayAdapter<String> spinnerArrayAdapter;
 
     StorageReference storageReference;
 
@@ -111,11 +109,16 @@ public class EditEventFragment extends Fragment {
         inputEventSpecs_Capacity.setMinValue(1);
         inputEventSpecs_Capacity.setMaxValue(100);
 
+        spinnerVals = new String[]{"Festa", "Desporto", "Refeição", "Convívio", "Outros"};
+        spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerVals);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputEventSpecs_Theme.setAdapter(spinnerArrayAdapter);
+
         btnConfirmEdit.setOnClickListener(v -> {
             if (TextUtils.isEmpty(inputEventSpecs_Title.getText().toString())) {
                 inputEventSpecs_Title.setError("Need to set a Title");
-            } else if (TextUtils.isEmpty(inputEventSpecs_Theme.getText().toString())) {
-                inputEventSpecs_Theme.setError("Need to set a Theme");
+            } else if (inputEventSpecs_Theme.getSelectedItem().toString().equals("Select an Theme")) {
+                Toast.makeText(getContext(), "Need to choose a Theme", Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(inputEventSpecs_Date.getText().toString())) {
                 inputEventSpecs_Date.setError("Need to choose a Date");
             } else if (TextUtils.isEmpty(inputEventSpecs_Local.getText().toString())) {
@@ -178,10 +181,8 @@ public class EditEventFragment extends Fragment {
         btnGroupChat= view.findViewById(R.id.btnGroupChat);
         btnDeleteEvent = view.findViewById(R.id.btnDeleteEvent);
         inputEventsSpecs_EventPhoto = view.findViewById(R.id.inputEditEvent_EventPhoto);
-        //inputEventsSpecs_UserPhoto = view.findViewById(R.id.inputEditEvent_UserPhoto);
         inputEventSpecs_Title = view.findViewById(R.id.inputEditEvent_Title);
         inputEventSpecs_Local = view.findViewById(R.id.inputEditEvent_Local);
-        //inputEventSpecs_Username = view.findViewById(R.id.inputEditEvent_Username);
         inputEventSpecs_Theme = view.findViewById(R.id.inputEditEvent_Theme);
         inputEventSpecs_Description = view.findViewById(R.id.inputEditEvent_Description);
         inputEventSpecs_Capacity = view.findViewById(R.id.inputEditEvent_MaxCapacity);
@@ -223,11 +224,17 @@ public class EditEventFragment extends Fragment {
                     }
                     i++;
                 }
-
+                String selected = value.getString("Theme");
+                int j = 0;
+                for (String val : spinnerVals) {
+                    if (val.equals(selected)) {
+                        inputEventSpecs_Theme.setSelection(j);
+                    }
+                    j++;
+                }
 
                 inputEventSpecs_Title.setText(value.getString("Title"));
                 inputEventSpecs_Local.setText(value.getString("Address"));
-                inputEventSpecs_Theme.setText(value.getString("Theme"));
                 inputEventSpecs_Description.setText(value.getString("Description"));
                 inputEventSpecs_Capacity.setValue((Integer) Objects.requireNonNull(value.getLong(("MaxCapacity"))).intValue());
                 inputEventSpecs_Date.setText(date);
@@ -264,7 +271,7 @@ public class EditEventFragment extends Fragment {
     private void PerformCreation() {
         String title = inputEventSpecs_Title.getText().toString().trim();
         Integer max_capacity = inputEventSpecs_Capacity.getValue();
-        String theme = inputEventSpecs_Theme.getText().toString().trim();
+        String theme = inputEventSpecs_Theme.getSelectedItem().toString();
         String date = inputEventSpecs_Date.getText().toString().trim();
         String duration = pickerVals[inputEventSpecs_Duration.getValue()];
         String description = inputEventSpecs_Description.getText().toString().trim();
@@ -303,7 +310,6 @@ public class EditEventFragment extends Fragment {
         event.put("Description", description);
         event.put("Private", private_event);
         event.put("CreatorID", userID);
-        System.out.println(event);
         documentEventReference.update(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {

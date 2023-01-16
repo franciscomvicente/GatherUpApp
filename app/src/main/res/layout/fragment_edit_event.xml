@@ -185,7 +185,7 @@
             app:layout_constraintStart_toEndOf="@+id/txtEditEvent_MaxCapacity"
             app:layout_constraintTop_toTopOf="@+id/txtEditEvent_MaxCapacity" />
 
-        <EditText
+        <Spinner
             android:id="@+id/inputEditEvent_Theme"
             style="@style/Inputs"
             android:layout_width="0dp"
@@ -194,9 +194,10 @@
             android:background="@drawable/fields_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/txtEditEvent_Theme"
+            app:layout_constraintBottom_toTopOf="@+id/inputEditEvent_Local"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Theme" />
+            app:layout_constraintStart_toEndOf="@+id/txtEditEvent_Theme"
+            app:layout_constraintTop_toBottomOf="@+id/inputEditEvent_Description" />
 
         <EditText
             android:id="@+id/inputEditEvent_Date"

@@ -83,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         }
     }
 
+    public Location getCurrentLocation() {
+        return mCurrentLocation;
+    }
+
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }

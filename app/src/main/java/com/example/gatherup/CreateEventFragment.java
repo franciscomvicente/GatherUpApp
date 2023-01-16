@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,16 +15,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -52,15 +58,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateEventFragment extends Fragment {
+public class CreateEventFragment extends Fragment implements MainActivity.LocationCallback {
 
     ImageView inputCreateEvent_EventPhoto;
     BottomNavigationView bottomNavigationView;
     Button btnCreateEvent;
-    EditText inputCreateEvent_Title, inputCreateEvent_Theme, inputCreateEvent_Date, inputCreateEvent_Local, inputCreateEvent_Description, inputCreateEvent_Hours;
+    EditText inputCreateEvent_Title, inputCreateEvent_Date, inputCreateEvent_Local, inputCreateEvent_Description, inputCreateEvent_Hours;
     NumberPicker inputCreateEvent_MaxCapacity, inputCreateEvent_Duration;
     Switch inputCreateEvent_PrivateEvent;
     String address;
+    Spinner inputCreateEvent_Theme;
 
     FirebaseAuth auth;
     FirebaseUser user;
@@ -68,12 +75,16 @@ public class CreateEventFragment extends Fragment {
     String userID;
     String eventID;
 
+    private Location location;
+
     Double longitude;
     Double latitude;
 
     StorageReference storageReference;
     private Uri imageUri;
     private String[] pickerVals;
+    private String[] spinnerVals;
+    private ArrayAdapter<String> spinnerArrayAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,11 +118,17 @@ public class CreateEventFragment extends Fragment {
         inputCreateEvent_MaxCapacity.setMinValue(1);
         inputCreateEvent_MaxCapacity.setMaxValue(100);
 
+        spinnerVals = new String[]{"Festa", "Desporto", "Refeição", "Convívio", "Outros"};
+        spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerVals);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        inputCreateEvent_Theme.setAdapter(spinnerArrayAdapter);
+        inputCreateEvent_Theme.setPrompt("Select an Theme");
+
         btnCreateEvent.setOnClickListener(v -> {
             if (TextUtils.isEmpty(inputCreateEvent_Title.getText().toString())) {
                 inputCreateEvent_Title.setError("Need to set a Title");
-            } else if (TextUtils.isEmpty(inputCreateEvent_Theme.getText().toString())) {
-                inputCreateEvent_Theme.setError("Need to set a Theme");
+            } else if (inputCreateEvent_Theme.getSelectedItem().toString().equals("Select an Theme")) {
+                Toast.makeText(getContext(), "Need to choose a Theme", Toast.LENGTH_SHORT).show();
             } else if (TextUtils.isEmpty(inputCreateEvent_Date.getText().toString())) {
                 inputCreateEvent_Date.setError("Need to choose a Date");
             } else if (TextUtils.isEmpty(inputCreateEvent_Local.getText().toString())) {
@@ -167,6 +184,20 @@ public class CreateEventFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setCallback(this);
+
+        location = activity.getCurrentLocation();
+        if (location == null) {
+            location = new Location("");
+            location.setLatitude(38.756435);
+            location.setLongitude(-9.156538);
+        }
+    }
+
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -181,7 +212,7 @@ public class CreateEventFragment extends Fragment {
     private void PerformCreation() {
         String title = inputCreateEvent_Title.getText().toString().trim();
         Integer max_capacity = inputCreateEvent_MaxCapacity.getValue();
-        String theme = inputCreateEvent_Theme.getText().toString().trim();
+        String theme = inputCreateEvent_Theme.getSelectedItem().toString();
         String date = inputCreateEvent_Date.getText().toString().trim();
         String duration = pickerVals[inputCreateEvent_Duration.getValue()];
         String description = inputCreateEvent_Description.getText().toString().trim();
@@ -218,7 +249,7 @@ public class CreateEventFragment extends Fragment {
         event.put("MaxCapacity", max_capacity);
         event.put("Theme", theme);
         event.put("Duration", duration);
-        event.put("Local", new GeoPoint(latitude,longitude));
+        event.put("Local", new GeoPoint(latitude, longitude));
         event.put("Address", address);
         event.put("Date", timestamp);
         event.put("Description", description);
@@ -269,7 +300,7 @@ public class CreateEventFragment extends Fragment {
     private void clearFields() {
         inputCreateEvent_EventPhoto.setImageResource(0);
         inputCreateEvent_Title.setText("");
-        inputCreateEvent_Theme.setText("");
+        inputCreateEvent_Theme.setSelection(0);
         inputCreateEvent_Date.setText("");
         inputCreateEvent_Duration.setValue(0);
         inputCreateEvent_MaxCapacity.setValue(0);
@@ -280,7 +311,7 @@ public class CreateEventFragment extends Fragment {
 
     private void localPicker() {
         Intent intent = new PlacePicker.IntentBuilder()
-                .setLatLong(38.756435, -9.156538)
+                .setLatLong(location.getLatitude(), location.getLongitude())//(38.756435, -9.156538)
                 .showLatLong(true)
                 .setMapType(MapType.NORMAL)
                 .hideMarkerShadow(true)
@@ -311,4 +342,17 @@ public class CreateEventFragment extends Fragment {
         }
 
     });
+
+    @Override
+    public void onLocationChanged(Location currentLocation) {
+        location = currentLocation;
+        System.out.println("Mudei de sitio");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setCallback(null);
+    }
 }

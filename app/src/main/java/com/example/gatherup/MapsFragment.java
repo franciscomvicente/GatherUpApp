@@ -11,7 +11,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -67,8 +66,6 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
 
     private GoogleMap mMap;
     private static final int REQUEST_CHECK_SETTINGS = 100;
-    public Double latitude;
-    public Double longitude;
     private boolean flagLocation = false;
     Marker markername;
     Button listaEventosButton;
@@ -149,6 +146,12 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
             ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
 
+        try {
+            location = activity.getCurrentLocation();
+        }catch (Exception e){
+            System.out.println("Sem localização");
+        }
+
         focusMeButton.setOnClickListener(v -> {
             FocusMe();
         });
@@ -191,17 +194,9 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
     @Override
     public void onLocationChanged(@NonNull Location currentLocation) {
         location = currentLocation;
-        if (location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            Log.d("MapFragment", "Latitude: " + latitude + " Longitude: " + longitude);
-        } else {
-            Log.d("MapFragment", "Location not available");
-        }
-
         UpdateDistance();
 
-        if (mMap != null) {
+        if (mMap != null && location != null) {
             DisplayLocation();
         }
     }
@@ -219,14 +214,14 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
      */
 
     public void DisplayLocation() {
-        LatLng loc = new LatLng(latitude, longitude);
+        LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
         if (markername != null) {
             markername.remove();
         }
 
-        if (latitude != null && longitude != null) {
+        if (location != null) {
             try {
-                markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)));
+                markername = mMap.addMarker(new MarkerOptions().position(loc).title("This is Me").icon(bitmapDescriptorFromVector(getActivity(), R.drawable.people)).zIndex(1));
                 if (!flagLocation) {
                     FocusMe();
                     flagLocation = true;
@@ -265,10 +260,21 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
             for (EventsModel eventLocation : shownevents) {
                 try {
                     String snippet = "";
-                    Uri avatar = null;
+                    int avatar = 0;
                     String date = toDate(eventLocation);
                     snippet = eventLocation.getDescription() + " - " + date;
-
+                    if (eventLocation.getTheme().equals("Festa")) {
+                        avatar = R.drawable.party;
+                    } else if (eventLocation.getTheme().equals("Refeição")) {
+                        avatar = R.drawable.food;
+                    } else if (eventLocation.getTheme().equals("Desporto")) {
+                        avatar = R.drawable.sports;
+                    } else if (eventLocation.getTheme().equals("Convívio")) {
+                        avatar = R.drawable.conviviality;
+                    } else if (eventLocation.getTheme().equals("Outros")) {
+                        avatar = R.drawable.other;
+                    }
+                    
                     //System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
                     try {
                         //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
@@ -403,8 +409,8 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
     }
 
     private void FocusMe() {
-        if (mMap != null && latitude != null && longitude != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 13));
+        if (mMap != null && location != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
         } else {
 
         }
@@ -457,7 +463,7 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
                 mLastShakeTimestamp = currentTimestamp;
                 Toast.makeText(getContext(), "Events within 3Km", Toast.LENGTH_SHORT).show();
                 EventsShow();
-            } else{
+            } else {
                 Toast.makeText(getContext(), "Wait a few until shake again", Toast.LENGTH_SHORT).show();
             }
         }
@@ -480,20 +486,20 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
         mSensorManager.unregisterListener(this);
     }
 
-    private void EventsShow(){
+    private void EventsShow() {
         UpdateDistance();
         shownevents = new ArrayList<>();
-        for(EventsModel eventsModel: list){
+        for (EventsModel eventsModel : list) {
             String distance = eventsModel.getDistance();
             String[] parts = distance.split("[a-zA-Z]+");
             double distanceNumber = Double.parseDouble(parts[0]);
             String letter = distance.replace(parts[0], "").trim();
             if (letter.equals("Km")) {
-                if (distanceNumber < 3){
+                if (distanceNumber < 3) {
                     shownevents.add(eventsModel);
                 }
             } else if (letter.equals("M")) {
-                if(distanceNumber < 3000){
+                if (distanceNumber < 3000) {
                     shownevents.add(eventsModel);
                 }
             }
@@ -501,6 +507,11 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
         deletemarkers();
         addMapMarkers();
         FocusMe();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
 }
