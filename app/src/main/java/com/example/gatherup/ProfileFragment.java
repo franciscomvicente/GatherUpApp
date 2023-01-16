@@ -48,16 +48,19 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
     RecyclerView recyclerViewAllEvents;
     RecyclerView recylerViewHostEvents;
 
+
     FirebaseAuth auth;
     FirebaseUser user;
     FirebaseFirestore store;
     String userID;
+
 
     StorageReference storageReference;
 
     private FirestoreAdapter adapter;
     private FirestoreAdapter adapter2;
     ArrayList<String> eventIDs;
+    ArrayList<String> friendIDs;
 
 
     @Override
@@ -95,53 +98,26 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
             }
         });
 
-        eventIDs = new ArrayList<>();
 
-        Query queryAux = store.collection("Users").document(profileID).collection("Events");
+        friendIDs = new ArrayList<>();
+        Query queryFriends = store.collection("Users").document(profileID).collection("Friends");
 
-        queryAux.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        queryFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        System.out.println("document.getData(): " + document.getData());
-                        String eventReference = document.getId();
-                        if(eventIDs.size() < 10) {
-                            eventIDs.add(eventReference);
-                            System.out.println(eventReference);
+                if(task.isSuccessful()) {
+                    for(QueryDocumentSnapshot document : task.getResult()) {
+                        String friendID = document.getId();
+                        if(friendIDs.size() < 10) {
+                            friendIDs.add(friendID);
+                            System.out.println(friendID);
                         }
                     }
-                    System.out.println(eventIDs);
-                    getIds();
-                } else {
-                    Log.d("TAG", "Error getting event references: ", task.getException());
                 }
-
+                querys(profileID);
             }
         });
 
-        //QUERYHOST
-        Query queryHost = store.collection("Events").whereEqualTo("CreatorID", profileID).whereEqualTo("Private", false);
-
-        PagingConfig configHost = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-
-        //PAGING OPTIONS
-        FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(queryHost, configHost, new SnapshotParser<EventsModel>() {
-            @NonNull
-            @Override
-            public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                EventsModel eventsModel = snapshot.toObject(EventsModel.class);
-                String eventID = snapshot.getId();
-                eventsModel.setEventID(eventID);
-                return eventsModel;
-            }
-        }).build();
-
-        adapter2 = new FirestoreAdapter(options, this);
-
-        recylerViewHostEvents.setHasFixedSize(true);
-        recylerViewHostEvents.setLayoutManager(new LinearLayoutManager(getContext()));
-        recylerViewHostEvents.setAdapter(adapter2);
 
         return view;
     }
@@ -166,7 +142,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
 
     private void getIds() {
         if (!eventIDs.isEmpty()) {
-            Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs).whereEqualTo("Private", false);
+            Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs);
 
             PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
@@ -186,6 +162,61 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
             recyclerViewAllEvents.setHasFixedSize(true);
             recyclerViewAllEvents.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerViewAllEvents.setAdapter(adapter);
+        }
+    }
+
+    private void querys(String profileID){
+        eventIDs = new ArrayList<>();
+
+        if(friendIDs.contains(userID)){
+
+            Query queryAux = store.collection("Users").document(profileID).collection("Events");
+
+
+            queryAux.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            System.out.println("document.getData(): " + document.getData());
+                            String eventReference = document.getId();
+                            if(eventIDs.size() < 10) {
+                                eventIDs.add(eventReference);
+                                System.out.println(eventReference);
+                            }
+                        }
+                        System.out.println(eventIDs);
+                        getIds();
+                    } else {
+                        Log.d("TAG", "Error getting event references: ", task.getException());
+                    }
+
+                }
+            });
+
+
+            //QUERYHOST
+            Query queryHost = store.collection("Events").whereEqualTo("CreatorID", profileID);
+
+            PagingConfig configHost = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+
+            //PAGING OPTIONS
+            FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(queryHost, configHost, new SnapshotParser<EventsModel>() {
+                @NonNull
+                @Override
+                public EventsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                    EventsModel eventsModel = snapshot.toObject(EventsModel.class);
+                    String eventID = snapshot.getId();
+                    eventsModel.setEventID(eventID);
+                    return eventsModel;
+                }
+            }).build();
+
+            adapter2 = new FirestoreAdapter(options, this);
+
+            recylerViewHostEvents.setHasFixedSize(true);
+            recylerViewHostEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+            recylerViewHostEvents.setAdapter(adapter2);
         }
     }
 }
