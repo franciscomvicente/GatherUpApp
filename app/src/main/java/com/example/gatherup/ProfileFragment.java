@@ -121,7 +121,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
         });
 
         //QUERYHOST
-        Query queryHost = store.collection("Events").whereEqualTo("CreatorID", profileID);
+        Query queryHost = store.collection("Events").whereEqualTo("CreatorID", profileID).whereEqualTo("Private", false);
 
         PagingConfig configHost = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
@@ -166,7 +166,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
 
     private void getIds() {
         if (!eventIDs.isEmpty()) {
-            Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs);
+            Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs).whereEqualTo("Private", false);
 
             PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
 
