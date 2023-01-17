@@ -100,7 +100,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
 
 
         friendIDs = new ArrayList<>();
-        Query queryFriends = store.collection("Users").document(profileID).collection("Friends");
+        Query queryFriends = store.collection("Users").document(profileID).collection("Friends").whereEqualTo("Status", "done");
 
         queryFriends.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
