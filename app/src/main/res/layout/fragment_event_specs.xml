@@ -25,11 +25,13 @@
         <TextView
             android:id="@+id/outputEventSpecs_Local"
             android:layout_width="wrap_content"
+            android:maxWidth="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="9dp"
             android:justificationMode="inter_word"
+            android:gravity="center"
             android:text="Local"
             android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/view"
@@ -105,7 +107,9 @@
             android:paddingRight="10dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtCreateEvent_Theme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Theme" />
+            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Theme"
+            android:editable="false"
+            android:focusable="false"/>
 
         <TextView
             android:id="@+id/txtDescription"
@@ -129,7 +133,9 @@
             android:paddingRight="10dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtDescription"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtDescription" />
+            app:layout_constraintStart_toEndOf="@+id/txtDescription"
+            android:editable="false"
+            android:focusable="false"/>
 
         <TextView
             android:id="@+id/txtCapacity"
@@ -153,7 +159,9 @@
             android:paddingRight="10dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtCapacity"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtCapacity" />
+            app:layout_constraintStart_toEndOf="@+id/txtCapacity"
+            android:editable="false"
+            android:focusable="false"/>
 
         <TextView
             android:id="@+id/txtDate"
@@ -177,7 +185,9 @@
             android:paddingRight="10dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtDate"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtDate" />
+            app:layout_constraintStart_toEndOf="@+id/txtDate"
+            android:editable="false"
+            android:focusable="false"/>
 
         <TextView
             android:id="@+id/txtCreateEvent_Duration"
@@ -202,7 +212,9 @@
             android:paddingRight="10dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/txtCreateEvent_Duration"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Duration" />
+            app:layout_constraintStart_toEndOf="@+id/txtCreateEvent_Duration"
+            android:editable="false"
+            android:focusable="false"/>
 
         <androidx.cardview.widget.CardView
 

@@ -1,4 +1,4 @@
-package com.example.gatherup.utils;
+package com.example.gatherup.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,7 +14,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-public class ClusterManagerRenderer extends DefaultClusterRenderer<ClusterMarker> {
+public class ClusterManagerRenderer extends DefaultClusterRenderer<ClusterMarker>{
     private final IconGenerator iconGenerator;
     private ImageView imageView;
     private final int markerWidth;
@@ -22,7 +22,6 @@ public class ClusterManagerRenderer extends DefaultClusterRenderer<ClusterMarker
 
     public ClusterManagerRenderer(Context context, GoogleMap map, ClusterManager<ClusterMarker> clusterManager) {
         super(context, map, clusterManager);
-
 
         iconGenerator = new IconGenerator(context.getApplicationContext());
         imageView = new ImageView(context.getApplicationContext());
@@ -39,10 +38,12 @@ public class ClusterManagerRenderer extends DefaultClusterRenderer<ClusterMarker
         imageView.setImageResource(item.getIconPicture());
         Bitmap icon = iconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getTitle());
+        markerOptions.snippet(item.getSnippet());
     }
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster<ClusterMarker> cluster) {
         return false;
     }
+
 }

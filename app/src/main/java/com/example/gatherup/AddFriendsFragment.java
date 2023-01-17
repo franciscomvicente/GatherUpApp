@@ -1,14 +1,6 @@
 package com.example.gatherup;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.paging.PagingConfig;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,11 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.paging.PagingConfig;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.gatherup.Utils.FindFriendsAdapter;
 import com.example.gatherup.Utils.FindFriendsModel;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -34,6 +36,9 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
     private FindFriendsAdapter adapter;
     private Query query;
     private PagingConfig config;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private String userID;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,8 +47,11 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
         inputPeople = view.findViewById(R.id.inputPeople);
         outputPeople = view.findViewById(R.id.outputPeople);
         store = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userID = user.getUid();
 
-        query = store.collection("Users");
+        query = store.collection("Users").whereNotEqualTo(FieldPath.documentId(), userID);
 
         inputPeople.addTextChangedListener(new TextWatcher() {
             @Override
@@ -54,7 +62,6 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchPeople = s.toString();
-                System.out.println(searchPeople);
                 SearchPeople(searchPeople);
             }
 
@@ -65,13 +72,13 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
         });
 
         config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-
         FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {
             @NonNull
             @Override
             public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
                 String userID = snapshot.getId();
+                System.out.println(userID);
                 findFriendsModel.setUserID(userID);
                 return findFriendsModel;
             }
@@ -109,7 +116,8 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
 
         profileFragment.setArguments(p);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, profileFragment).commit();
+        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
     }
+
 
 }
