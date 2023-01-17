@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gatherup.Utils.FindFriendsAdapter;
 import com.example.gatherup.Utils.FindFriendsModel;
+import com.example.gatherup.Utils.FriendsAdapter;
 import com.example.gatherup.Utils.RequestFriendsAdapter;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -27,6 +28,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 public class AcceptFriendsFragment extends Fragment implements RequestFriendsAdapter.OnListItemClicked{
 
@@ -40,6 +44,7 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String userID;
+    private ArrayList friendRequests;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,27 +57,14 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         user = auth.getCurrentUser();
         userID = user.getUid();
 
-        query = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
 
 
-        config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
-        FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {
-            @NonNull
-            @Override
-            public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
-                String userID = snapshot.getId();
-                System.out.println(userID);
-                findFriendsModel.setUserID(userID);
-                return findFriendsModel;
+        Query updated = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
+        updated.addSnapshotListener((value, error) -> {
+            if (value != null) {
+                Filter();
             }
-        }).build();
-
-        adapter = new RequestFriendsAdapter(options, this);
-        outputAccept.setHasFixedSize(true);
-        outputAccept.setLayoutManager(new LinearLayoutManager(getContext()));
-        outputAccept.setAdapter(adapter);
-
+        });
         return view;
     }
 
@@ -88,6 +80,61 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         profileFragment.setArguments(p);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
+    }
+
+
+    public void Filter() {
+        Query queryAux = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
+        friendRequests = new ArrayList<>();
+        System.out.println("");
+        queryAux.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    System.out.println("document.getData(): " + document.getData());
+                    String eventReference = document.getId();
+                    System.out.println(eventReference);
+                    //if(eventIDs.size() < 10) {
+                    friendRequests.add(eventReference);
+                    //}
+                }
+                Query();
+            } else {
+                Log.d("TAG", "Error getting event references: ", task.getException());
+            }
+        });
+
+    }
+
+    public void Query() {
+        if (!friendRequests.isEmpty()) {
+            query = store.collection("Users").whereIn(FieldPath.documentId(), friendRequests);
+            config = new PagingConfig(3);
+
+            FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {
+                @NonNull
+                @Override
+                public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
+                    FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
+                    String userID = snapshot.getId();
+                    System.out.println(userID);
+                    findFriendsModel.setUserID(userID);
+                    System.out.println(userID);
+                    System.out.println("ola");
+                    System.out.println("ola");
+                    return findFriendsModel;
+                }
+            }).build();
+
+            adapter = new RequestFriendsAdapter(options, this);
+            outputAccept.setLayoutManager(new LinearLayoutManager(getContext()));
+            outputAccept.setAdapter(adapter);
+
+        } else {
+            adapter = new RequestFriendsAdapter(new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "wherewhere"), new PagingConfig(3), snapshot -> null).build(),this);
+            outputAccept.setLayoutManager(new LinearLayoutManager(getContext()));
+            outputAccept.setAdapter(adapter);
+        }
+
     }
 
 

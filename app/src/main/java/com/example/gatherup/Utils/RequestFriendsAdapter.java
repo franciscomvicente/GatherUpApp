@@ -1,5 +1,6 @@
 package com.example.gatherup.Utils;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,6 @@ public class RequestFriendsAdapter extends FirestorePagingAdapter<FindFriendsMod
 
     @Override
     protected void onBindViewHolder(@NonNull EventsViewHolder holder, int position, @NonNull FindFriendsModel model) {
-        holder.list_username.setText(model.getUsername());
-
 
         holder.btnAcceptFriendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +61,10 @@ public class RequestFriendsAdapter extends FirestorePagingAdapter<FindFriendsMod
 
         profilePhoto = FirebaseStorage.getInstance().getReference().child("Users/" + model.getUserID() + "/profile.jpg");
         profilePhoto.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(holder.list_UserPhoto));
+        holder.list_username.setText(model.getUsername());
     }
+
+
 
     @NonNull
     @Override
