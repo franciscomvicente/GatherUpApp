@@ -70,7 +70,6 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         outputEvents.setHasFixedSize(true);
         outputEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         outputEvents.setAdapter(adapter);
-
         return view;
     }
 
@@ -108,5 +107,9 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
             }
         }
         return distancia;
+    }
+
+    private void clearFields() {
+
     }
 }

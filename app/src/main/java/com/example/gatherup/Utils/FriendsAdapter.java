@@ -15,6 +15,7 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -38,6 +39,12 @@ public class FriendsAdapter extends FirestorePagingAdapter<FindFriendsModel, Fri
     protected void onBindViewHolder(@NonNull EventsViewHolder holder, int position, @NonNull FindFriendsModel model) {
         holder.list_username.setText(model.getUsername());
         holder.btnAddFriend.setText("Remove Friend");
+        holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RemoveFriend(model.getUserID());
+            }
+        });
         //Check(holder, model.getUserID());
 
         profilePhoto = FirebaseStorage.getInstance().getReference().child("Users/" + model.getUserID() + "/profile.jpg");
@@ -83,47 +90,11 @@ public class FriendsAdapter extends FirestorePagingAdapter<FindFriendsModel, Fri
         void onItemClick(DocumentSnapshot snapshot, int position);
     }
 
-    /*
-    private void Check(FriendsAdapter.EventsViewHolder holder, String friendID) {
-        DocumentReference docIdRef = store.collection("Users").document(userID).collection("Friends").document(friendID);
-        docIdRef.get().addOnCompleteListener(task -> {
-            String TAG = "Teste";
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    if (document.getString("Status").equals("Done")) {
-                        holder.btnAddFriend.setText("Remove Friend");
-                        holder.btnAddFriend.setBackgroundColor(0xFFFF0000);
-                        holder.btnAddFriend.setOnClickListener(v -> RemoveFriend(holder,friendID));
-                    } else if (document.getString("Status").equals("Requesting")) {
-                        holder.btnAddFriend.setText("Requested");
-                        holder.btnAddFriend.setBackgroundColor(0xFF2CD0D5);
-                        holder.btnAddFriend.setOnClickListener(v -> RemoveFriend(holder,friendID));
-                    } else if (document.getString("Status").equals("Requested")){
-                        holder.btnAddFriend.setText("Accept");
-                        holder.btnAddFriend.setBackgroundColor(0xFF24D74E);
-                        holder.btnAddFriend.setOnClickListener(v -> AcceptFriend(holder,friendID));
-                    }
-                } else {
-                    holder.btnAddFriend.setText("Add Friend");
-                    holder.btnAddFriend.setBackgroundColor(0xFF437FC7);
-                    holder.btnAddFriend.setOnClickListener(v -> AddFriend(holder,friendID));
-                }
-            } else {
-                Log.d(TAG, "Failed with: ", task.getException());
-            }
-        });
-    }
-
-    private void RemoveFriend(FriendsAdapter.EventsViewHolder holder, String friendID) {
+    private void RemoveFriend(String friendID) {
         DocumentReference documentReferencefriend = store.collection("Users").document(friendID).collection("Friends").document(userID);
         documentReferencefriend.delete();
 
         DocumentReference documentReferenceuser = store.collection("Users").document(userID).collection("Friends").document(friendID);
         documentReferenceuser.delete();
-
-        Check(holder,friendID);
     }
-
-     */
 }

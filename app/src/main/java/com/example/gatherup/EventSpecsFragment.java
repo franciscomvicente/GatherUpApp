@@ -84,34 +84,38 @@ public class EventSpecsFragment extends Fragment {
         eventReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {                                  //this
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                String date = toDate(value);
-                maxcapacity = value.getLong("MaxCapacity");
-                subscribed = value.getLong("Subscribed");
-                String capacity = subscribed + "/" + maxcapacity;
+                try {
+                    String date = toDate(value);
+                    maxcapacity = value.getLong("MaxCapacity");
+                    subscribed = value.getLong("Subscribed");
+                    String capacity = subscribed + "/" + maxcapacity;
 
-                outputEventSpecs_Title.setText(value.getString("Title"));
-                outputEventSpecs_Local.setText(value.getString("Address"));
-                outputEventSpecs_Theme.setText(value.getString("Theme"));
-                outputEventSpecs_Description.setText(value.getString("Description"));
-                outputEventSpecs_Capacity.setText(capacity);
-                outputEventSpecs_Duration.setText(value.getString("Duration"));
-                outputEventSpecs_Date.setText(date);
+                    outputEventSpecs_Title.setText(value.getString("Title"));
+                    outputEventSpecs_Local.setText(value.getString("Address"));
+                    outputEventSpecs_Theme.setText(value.getString("Theme"));
+                    outputEventSpecs_Description.setText(value.getString("Description"));
+                    outputEventSpecs_Capacity.setText(capacity);
+                    outputEventSpecs_Duration.setText(value.getString("Duration"));
+                    outputEventSpecs_Date.setText(date);
 
-                creatorID = value.getString("CreatorID");
-                DocumentReference creatorReference = store.collection("Users").document(creatorID);
-                creatorReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot valueCreator, @Nullable FirebaseFirestoreException error) {
-                        outputEventSpecs_Username.setText(valueCreator.getString("Username"));
-                    }
-                });
-                StorageReference creatorPhoto = storageReference.child("Users/" + creatorID + "/profile.jpg");
-                creatorPhoto.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(outputEventsSpecs_UserPhoto);
-                    }
-                });
+                    creatorID = value.getString("CreatorID");
+                    DocumentReference creatorReference = store.collection("Users").document(creatorID);
+                    creatorReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot valueCreator, @Nullable FirebaseFirestoreException error) {
+                            outputEventSpecs_Username.setText(valueCreator.getString("Username"));
+                        }
+                    });
+                    StorageReference creatorPhoto = storageReference.child("Users/" + creatorID + "/profile.jpg");
+                    creatorPhoto.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Picasso.get().load(uri).into(outputEventsSpecs_UserPhoto);
+                        }
+                    });
+                }catch (Exception e){
+                    System.out.println("ERROR");
+                }
             }
         });
 
@@ -179,7 +183,7 @@ public class EventSpecsFragment extends Fragment {
         b.putString("key", eventID);
         editEventFragment.setArguments(b);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, editEventFragment).addToBackStack("teste").commit();
+        ft.replace(R.id.MainFragment, editEventFragment).commit();
     }
 
     private void CheckRegistered(String eventID) {
@@ -201,7 +205,7 @@ public class EventSpecsFragment extends Fragment {
                         if (getSubscribed(eventID) < maxcapacity) {
                             btnEvent.setText("Join Event");
                             btnEvent.setOnClickListener(v -> JoinEvent(eventID));
-                        }else {
+                        } else {
                             Toast.makeText(getContext(), "Event Already Full", Toast.LENGTH_SHORT).show();
                         }
                     } else {
@@ -215,12 +219,14 @@ public class EventSpecsFragment extends Fragment {
     }
 
     private String toDate(DocumentSnapshot value) {
+
         Timestamp timestamp = value.getTimestamp("Date");
         SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String time = sfd.format(timestamp.toDate());
         String date = (String) time;
 
         return date;
+
     }
 
     private long getSubscribed(String eventID) {

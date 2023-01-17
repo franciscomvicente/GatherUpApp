@@ -95,7 +95,7 @@ public class EditEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_event, container, false);
         //GET EVENT_ID
         eventID = getArguments().getString("key");
-        Log.d("TAG","TESTEEEE"+ eventID);
+        Log.d("TAG", "TESTEEEE" + eventID);
 
 
         associateLayoutElements(view);
@@ -176,9 +176,9 @@ public class EditEventFragment extends Fragment {
         return view;
     }
 
-    public void associateLayoutElements(View view){
+    public void associateLayoutElements(View view) {
         btnConfirmEdit = view.findViewById(R.id.btnEditEvent);
-        btnGroupChat= view.findViewById(R.id.btnGroupChat);
+        btnGroupChat = view.findViewById(R.id.btnGroupChat);
         btnDeleteEvent = view.findViewById(R.id.btnDeleteEvent);
         inputEventsSpecs_EventPhoto = view.findViewById(R.id.inputEditEvent_EventPhoto);
         inputEventSpecs_Title = view.findViewById(R.id.inputEditEvent_Title);
@@ -198,56 +198,61 @@ public class EditEventFragment extends Fragment {
     }
 
 
-    private void load(){
+    private void load() {
         //EVENT PHOTO
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference eventPhoto = storageReference.child("Events/"+ eventID + "/eventPhoto.jpg");
+        StorageReference eventPhoto = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
         eventPhoto.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(inputEventsSpecs_EventPhoto));
 
         DocumentReference eventReference = store.collection("Events").document(eventID);
         eventReference.addSnapshotListener(new EventListener<DocumentSnapshot>() {                                  //this
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                String date = toDate(value)[0];
-                String hours = toDate(value)[1];
+                try {
+                    String date = toDate(value)[0];
+                    String hours = toDate(value)[1];
 
-                pickerVals = new String[]{"0:05m", "0:10m", "0:15m", "0:30m", "1h:00", "1h:30", "2h:00", "3h:00", "5h:00", "7h:00", "12h:00", "24h:00"};
-                inputEventSpecs_Duration.setMinValue(0);
-                inputEventSpecs_Duration.setMaxValue(11);
-                inputEventSpecs_Duration.setDisplayedValues(pickerVals);
+                    pickerVals = new String[]{"0:05m", "0:10m", "0:15m", "0:30m", "1h:00", "1h:30", "2h:00", "3h:00", "5h:00", "7h:00", "12h:00", "24h:00"};
+                    inputEventSpecs_Duration.setMinValue(0);
+                    inputEventSpecs_Duration.setMaxValue(11);
+                    inputEventSpecs_Duration.setDisplayedValues(pickerVals);
 
-                String duration = value.getString("Duration");
-                int i = 0;
-                for (String val : pickerVals) {
-                    if (val.equals(duration)) {
-                        inputEventSpecs_Duration.setValue(i);
+                    String duration = value.getString("Duration");
+                    int i = 0;
+                    for (String val : pickerVals) {
+                        if (val.equals(duration)) {
+                            inputEventSpecs_Duration.setValue(i);
+                        }
+                        i++;
                     }
-                    i++;
-                }
-                String selected = value.getString("Theme");
-                int j = 0;
-                for (String val : spinnerVals) {
-                    if (val.equals(selected)) {
-                        inputEventSpecs_Theme.setSelection(j);
+                    String selected = value.getString("Theme");
+                    int j = 0;
+                    for (String val : spinnerVals) {
+                        if (val.equals(selected)) {
+                            inputEventSpecs_Theme.setSelection(j);
+                        }
+                        j++;
                     }
-                    j++;
+
+                    inputEventSpecs_Title.setText(value.getString("Title"));
+                    inputEventSpecs_Local.setText(value.getString("Address"));
+                    inputEventSpecs_Description.setText(value.getString("Description"));
+                    inputEventSpecs_Capacity.setValue((Integer) Objects.requireNonNull(value.getLong(("MaxCapacity"))).intValue());
+                    inputEventSpecs_Date.setText(date);
+                    inputEditEvent_Hours.setText(hours);
+
+                    geoPoint = value.getGeoPoint("Local");
+                    latitude = geoPoint.getLatitude();
+                    longitude = geoPoint.getLongitude();
+                    address = value.getString("Address");
+
+                }catch (Exception e){
+                    System.out.println(e);
                 }
-
-                inputEventSpecs_Title.setText(value.getString("Title"));
-                inputEventSpecs_Local.setText(value.getString("Address"));
-                inputEventSpecs_Description.setText(value.getString("Description"));
-                inputEventSpecs_Capacity.setValue((Integer) Objects.requireNonNull(value.getLong(("MaxCapacity"))).intValue());
-                inputEventSpecs_Date.setText(date);
-                inputEditEvent_Hours.setText(hours);
-
-                geoPoint = value.getGeoPoint("Local");
-                latitude = geoPoint.getLatitude();
-                longitude = geoPoint.getLongitude();
-                address = value.getString("Address");
-
             }
         });
     }
+
     private String[] toDate(DocumentSnapshot value) {
         Timestamp timestamp = value.getTimestamp("Date");
         SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -304,7 +309,7 @@ public class EditEventFragment extends Fragment {
         event.put("MaxCapacity", max_capacity);
         event.put("Theme", theme);
         event.put("Duration", duration);
-        event.put("Local", new GeoPoint(latitude,longitude));
+        event.put("Local", new GeoPoint(latitude, longitude));
         event.put("Address", address);
         event.put("Date", timestamp);
         event.put("Description", description);
@@ -375,10 +380,10 @@ public class EditEventFragment extends Fragment {
 
     });
 
-    private void DeleteEvent(){
+    private void DeleteEvent() {
         btnDeleteEvent.setOnClickListener((view -> {
             store.collection("Events").document(eventID).delete();
-            getActivity().getSupportFragmentManager().popBackStack();
+
             MyProfileFragment myProfileFragment = new MyProfileFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, myProfileFragment).commit();

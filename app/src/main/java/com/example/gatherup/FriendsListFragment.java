@@ -124,14 +124,12 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
     public void Query() {
         if (!friends.isEmpty()) {
             query = store.collection("Users").whereIn(FieldPath.documentId(), friends);
-            System.out.println("2222");
             config = new PagingConfig(3);
 
             FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {
                 @NonNull
                 @Override
                 public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
-                    System.out.println("1111");
                     FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
                     String userID = snapshot.getId();
                     findFriendsModel.setUserID(userID);
@@ -146,5 +144,18 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
         } else {
             System.out.println("ERRRRO");
         }
+    }
+
+    private void SearchPeople(String searchPeople) {
+        query = store.collection("Users").orderBy("Username").startAt(searchPeople).endAt(searchPeople+"\uf8ff").whereIn(FieldPath.documentId(), friends);
+        FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, snapshot -> {
+            FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
+            String userID = snapshot.getId();
+            findFriendsModel.setUserID(userID);
+            return findFriendsModel;
+        }).build();
+
+        adapter = new FriendsAdapter(options, this);
+        outputFriends.setAdapter(adapter);
     }
 }

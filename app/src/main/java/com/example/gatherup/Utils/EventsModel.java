@@ -14,10 +14,11 @@ public class EventsModel {
     private Location Location;
     private String Distance;
     private String Theme;
+    private Integer Subscribed;
 
     private EventsModel() {}
 
-    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance, String Theme){
+    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance, String Theme, Integer Subscribed){
         this.Title = Title;
         this.Date  = Date;
         this.eventID = eventID;
@@ -27,6 +28,7 @@ public class EventsModel {
         this.Location = Location;
         this.Distance = Distance;
         this.Theme = Theme;
+        this.Subscribed = Subscribed;
     }
 
     public String getTitle(){
@@ -97,8 +99,16 @@ public class EventsModel {
         return Theme;
     }
 
-    public void SetTheme(String Theme) {
+    public void setTheme(String Theme) {
         this.Theme = Theme;
+    }
+
+    public Integer getSubscribed() {
+        return Subscribed;
+    }
+
+    public void setSubscribed(Integer Subscribed) {
+        this.Subscribed = Subscribed;
     }
 
 }

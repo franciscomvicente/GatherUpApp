@@ -62,7 +62,6 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchPeople = s.toString();
-                System.out.println(searchPeople);
                 SearchPeople(searchPeople);
             }
 
