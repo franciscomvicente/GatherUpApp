@@ -39,6 +39,7 @@ public class FriendsAdapter extends FirestorePagingAdapter<FindFriendsModel, Fri
     protected void onBindViewHolder(@NonNull EventsViewHolder holder, int position, @NonNull FindFriendsModel model) {
         holder.list_username.setText(model.getUsername());
         holder.btnAddFriend.setText("Remove Friend");
+        holder.btnAddFriend.setBackgroundColor(0xFFFF0000);
         holder.btnAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
