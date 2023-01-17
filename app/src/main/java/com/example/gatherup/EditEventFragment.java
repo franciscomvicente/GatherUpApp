@@ -246,7 +246,7 @@ public class EditEventFragment extends Fragment {
                     longitude = geoPoint.getLongitude();
                     address = value.getString("Address");
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e);
                 }
             }
@@ -322,11 +322,7 @@ public class EditEventFragment extends Fragment {
             }
         });
 
-        if (!(imageUri == null)) {
-            uploadImageToFirebase(imageUri);
-        } else {
-            uploadDeafultImage();
-        }
+        uploadImageToFirebase(imageUri);
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
@@ -334,17 +330,10 @@ public class EditEventFragment extends Fragment {
         file.putFile(imageUri);
     }
 
-    private void uploadDeafultImage() {
-        StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
-        Uri image = Uri.parse("android.resource://com.example.gatherup/drawable/" + R.drawable.defaultimageevent);
-        file.putFile(image);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
     }
-
 
     private void localPicker() {
         Intent intent = new PlacePicker.IntentBuilder()
@@ -362,7 +351,6 @@ public class EditEventFragment extends Fragment {
         pickeractivity.launch(intent);
     }
 
-
     ActivityResultLauncher<Intent> pickeractivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -377,7 +365,6 @@ public class EditEventFragment extends Fragment {
                 Log.e("MainActivity", e.getMessage());
             }
         }
-
     });
 
     private void DeleteEvent() {

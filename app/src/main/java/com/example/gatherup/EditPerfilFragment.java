@@ -121,9 +121,6 @@ public class EditPerfilFragment extends Fragment {
             datePickerDialog.show();
         });
 
-
-
-
         return view;
     }
 
