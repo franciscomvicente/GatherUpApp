@@ -112,4 +112,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
     private void clearFields() {
 
     }
+
+    public void refreshEvents(View view) {
+    }
 }
