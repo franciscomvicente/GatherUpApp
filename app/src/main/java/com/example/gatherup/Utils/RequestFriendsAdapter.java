@@ -43,6 +43,9 @@ public class RequestFriendsAdapter extends FirestorePagingAdapter<FindFriendsMod
 
     @Override
     protected void onBindViewHolder(@NonNull EventsViewHolder holder, int position, @NonNull FindFriendsModel model) {
+        holder.btnAcceptFriendRequest.setBackgroundColor(0xFF24D74E);
+        holder.btnRejectFriendRequest.setBackgroundColor(0xFFFF0000);
+
 
         holder.btnAcceptFriendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
