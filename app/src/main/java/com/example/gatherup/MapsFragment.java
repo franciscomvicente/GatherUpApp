@@ -53,7 +53,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class MapsFragment extends Fragment implements /*LocationListener, */ OnMapReadyCallback, MainActivity.LocationCallback, SensorEventListener {
+public class MapsFragment extends Fragment implements OnMapReadyCallback, MainActivity.LocationCallback, SensorEventListener {
 
     private static final String TAG = "Teste";
     public static final int ERROR_DIALOG_REQUEST = 9001;
@@ -137,11 +137,6 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
 
         listaEventosButton.setOnClickListener(view1 -> {
             Fragment eventListFragment = new EventListFragment();
-
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("last_known_location", location);
-            eventListFragment.setArguments(bundle);
-
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
@@ -149,7 +144,6 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
         try {
             location = activity.getCurrentLocation();
         }catch (Exception e){
-            System.out.println("Sem localização");
         }
 
         focusMeButton.setOnClickListener(v -> {
