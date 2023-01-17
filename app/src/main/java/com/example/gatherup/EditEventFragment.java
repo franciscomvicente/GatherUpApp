@@ -378,9 +378,10 @@ public class EditEventFragment extends Fragment {
     private void DeleteEvent(){
         btnDeleteEvent.setOnClickListener((view -> {
             store.collection("Events").document(eventID).delete();
+            getActivity().getSupportFragmentManager().popBackStack();
             MyProfileFragment myProfileFragment = new MyProfileFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, myProfileFragment).commit(); // addToBackStack(null) back to last fragment with bugs
+            ft.replace(R.id.MainFragment, myProfileFragment).commit();
         }));
     }
 }

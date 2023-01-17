@@ -217,6 +217,7 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         String duration = pickerVals[inputCreateEvent_Duration.getValue()];
         String description = inputCreateEvent_Description.getText().toString().trim();
         String hours = inputCreateEvent_Hours.getText().toString().trim();
+        Integer subscribed = 1;
 
         //Timestamp
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
@@ -255,10 +256,21 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         event.put("Description", description);
         event.put("Private", private_event);
         event.put("CreatorID", userID);
+        event.put("Subscribed", subscribed);
         documentEventReference.set(event).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Log.d("TAG", "onSuccess:" + eventID + "EventCreated");
+                DocumentReference userRef = store.collection("Users").document(userID);
+                DocumentReference documentParticipantsReference = store.collection("Events").document(eventID).collection("Participants").document(userID);
+                Map<String, Object> participant = new HashMap<>();
+                participant.put("Participant", userRef);
+                documentParticipantsReference.set(participant).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("TAG", "onSuccess:" + userID + "add as participant of event" + eventID);
+                    }
+                });
             }
         });
 

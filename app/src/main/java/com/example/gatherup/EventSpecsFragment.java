@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,7 +32,6 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class EventSpecsFragment extends Fragment {
 
@@ -45,6 +46,9 @@ public class EventSpecsFragment extends Fragment {
     String userID;
     String creatorID;
 
+    private long subscribed;
+    private long maxcapacity;
+
     StorageReference storageReference;
 
     @Override
@@ -53,10 +57,9 @@ public class EventSpecsFragment extends Fragment {
 
         //GET EVENT_ID
         String eventID = getArguments().getString("key");
-        Log.d("TAG","TESTEEEE"+ eventID);
 
         btnEvent = view.findViewById(R.id.btnEvent);
-        btnGroupChat= view.findViewById(R.id.btnGroupChat);
+        btnGroupChat = view.findViewById(R.id.btnGroupChat);
         outputEventsSpecs_EventPhoto = view.findViewById(R.id.outputEventSpecs_EventPhoto);
         outputEventsSpecs_UserPhoto = view.findViewById(R.id.outputEventSpecs_UserPhoto);
         outputEventSpecs_Title = view.findViewById(R.id.outputEventSpecs_Title);
@@ -74,7 +77,7 @@ public class EventSpecsFragment extends Fragment {
 
         //EVENT PHOTO
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference eventPhoto = storageReference.child("Events/"+ eventID + "/eventPhoto.jpg");
+        StorageReference eventPhoto = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
         eventPhoto.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(outputEventsSpecs_EventPhoto));
 
         DocumentReference eventReference = store.collection("Events").document(eventID);
@@ -82,15 +85,17 @@ public class EventSpecsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 String date = toDate(value);
+                maxcapacity = value.getLong("MaxCapacity");
+                subscribed = value.getLong("Subscribed");
+                String capacity = subscribed + "/" + maxcapacity;
 
                 outputEventSpecs_Title.setText(value.getString("Title"));
                 outputEventSpecs_Local.setText(value.getString("Address"));
                 outputEventSpecs_Theme.setText(value.getString("Theme"));
                 outputEventSpecs_Description.setText(value.getString("Description"));
-                outputEventSpecs_Capacity.setText(String.valueOf(Objects.requireNonNull(value.getLong("MaxCapacity")).intValue()));
+                outputEventSpecs_Capacity.setText(capacity);
                 outputEventSpecs_Duration.setText(value.getString("Duration"));
                 outputEventSpecs_Date.setText(date);
-
 
                 creatorID = value.getString("CreatorID");
                 DocumentReference creatorReference = store.collection("Users").document(creatorID);
@@ -100,7 +105,7 @@ public class EventSpecsFragment extends Fragment {
                         outputEventSpecs_Username.setText(valueCreator.getString("Username"));
                     }
                 });
-                StorageReference creatorPhoto = storageReference.child("Users/"+ creatorID + "/profile.jpg");
+                StorageReference creatorPhoto = storageReference.child("Users/" + creatorID + "/profile.jpg");
                 creatorPhoto.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -125,7 +130,7 @@ public class EventSpecsFragment extends Fragment {
         return view;
     }
 
-    private void JoinEvent(String eventID){
+    private void JoinEvent(String eventID) {
         DocumentReference ref = store.collection("Events").document(eventID);
         DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
         Map<String, Object> user = new HashMap<>();
@@ -136,10 +141,24 @@ public class EventSpecsFragment extends Fragment {
                 Log.d("TAG", "onSuccess:" + eventID + "associated" + userID);
             }
         });
+        //add +1 to subscribed
+        ref.update("Subscribed", FieldValue.increment(1));
+
+        DocumentReference userRef = store.collection("Users").document(userID);
+        DocumentReference documentParticipantsReference = store.collection("Events").document(eventID).collection("Participants").document(userID);
+        Map<String, Object> participant = new HashMap<>();
+        participant.put("Participant", userRef);
+        documentParticipantsReference.set(participant).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d("TAG", "onSuccess:" + userID + "add as participant of event" + eventID);
+            }
+        });
+
         CheckRegistered(eventID);
     }
 
-    private void LeaveEvent(String eventID){
+    private void LeaveEvent(String eventID) {
         DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
         documentReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -147,10 +166,14 @@ public class EventSpecsFragment extends Fragment {
                 Log.d("TAG", "onSuccess:" + eventID + "disassociated" + userID);
             }
         });
+
+        store.collection("Events").document(eventID).collection("Participants").document(userID).delete();
+        store.collection("Events").document(eventID).update("Subscribed", FieldValue.increment(-1));
+
         CheckRegistered(eventID);
     }
 
-    private void EditEvent(String eventID){
+    private void EditEvent(String eventID) {
         EditEventFragment editEventFragment = new EditEventFragment();
         Bundle b = new Bundle();
         b.putString("key", eventID);
@@ -159,25 +182,31 @@ public class EventSpecsFragment extends Fragment {
         ft.replace(R.id.MainFragment, editEventFragment).addToBackStack("teste").commit();
     }
 
-    private void CheckRegistered(String eventID){
+    private void CheckRegistered(String eventID) {
         DocumentReference docIdRef = store.collection("Users").document(userID).collection("Events").document(eventID);
         docIdRef.get().addOnCompleteListener(task -> {
             String TAG = "Teste";
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    if(creatorID.equals(userID)){
+                    if (creatorID.equals(userID)) {
                         btnEvent.setText("Edit Event");
                         btnEvent.setOnClickListener(v -> EditEvent(eventID));
                     } else {
                         btnEvent.setText("Leave Event");
                         btnEvent.setOnClickListener(v -> LeaveEvent(eventID));
-                        System.out.println("REGISTERED");
                     }
                 } else {
-                    btnEvent.setText("Join Event");
-                    btnEvent.setOnClickListener(v -> JoinEvent(eventID));
-                    System.out.println("NOT REGISTERED");
+                    if (subscribed < maxcapacity) {
+                        if (getSubscribed(eventID) < maxcapacity) {
+                            btnEvent.setText("Join Event");
+                            btnEvent.setOnClickListener(v -> JoinEvent(eventID));
+                        }else {
+                            Toast.makeText(getContext(), "Event Already Full", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        btnEvent.setText("Event Full");
+                    }
                 }
             } else {
                 Log.d(TAG, "Failed with: ", task.getException());
@@ -185,12 +214,22 @@ public class EventSpecsFragment extends Fragment {
         });
     }
 
-    private String toDate(DocumentSnapshot value){
+    private String toDate(DocumentSnapshot value) {
         Timestamp timestamp = value.getTimestamp("Date");
         SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         String time = sfd.format(timestamp.toDate());
         String date = (String) time;
 
         return date;
+    }
+
+    private long getSubscribed(String eventID) {
+        store.collection("Events").document(eventID).addSnapshotListener((value, error) -> subscribed = value.getLong("Subscribed"));
+        return subscribed;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }
