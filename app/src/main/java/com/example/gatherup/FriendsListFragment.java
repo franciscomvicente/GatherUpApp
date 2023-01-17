@@ -34,6 +34,7 @@ import java.util.ArrayList;
 public class FriendsListFragment extends Fragment implements FriendsAdapter.OnListItemClicked {
 
     private Button btnAddFriend;
+    private Button btnAcceptFriend;
     private EditText inputFriendName;
     private RecyclerView outputFriends;
 
@@ -52,6 +53,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
         view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
         btnAddFriend = view.findViewById(R.id.btnAddFriend);
+        btnAcceptFriend = view.findViewById(R.id.btnAcceptFriends);
         inputFriendName = view.findViewById(R.id.inputFriendName);
         outputFriends = view.findViewById(R.id.outputFriends);
         store = FirebaseFirestore.getInstance();
@@ -90,6 +92,12 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
             Fragment addFriendsFragment = new AddFriendsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, addFriendsFragment).commit();
+        });
+
+        btnAcceptFriend.setOnClickListener(view1 -> {
+            Fragment acceptFriendsFragment = new AcceptFriendsFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainFragment, acceptFriendsFragment).commit();
         });
 
         return view;

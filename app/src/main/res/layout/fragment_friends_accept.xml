@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendsListFragment"
-    android:id="@+id/fragmentFriendsList">
+    tools:context=".AddFriendsFragment"
+    android:id="@+id/fragmentAddFriends">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -14,61 +14,37 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/inputFriendName"
+            android:id="@+id/inputAccept"
             android:layout_width="275sp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/fields_bg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtFindFriend">
+            app:layout_constraintTop_toBottomOf="@+id/txtFindAccept">
 
         </EditText>
 
         <TextView
-            android:id="@+id/txtFindFriend"
+            android:id="@+id/txtFindAccept"
             android:layout_width="115dp"
             android:layout_height="0dp"
-            android:text="Encontre Amigos"
+            android:text="Encontrar Amigo"
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/outputFriends"
+            android:id="@+id/outputFriendRequest"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/btnAddFriend"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/inputFriendName" />
-
-        <Button
-            android:id="@+id/btnAddFriend"
-            style="@style/ButtonsFino"
-            android:layout_width="140dp"
-            android:background="@drawable/buttons_bg"
-            android:onClick="AddFriends"
-            android:layout_marginBottom="18dp"
-            android:text="Add Friends"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="30dp"/>
-
-        <Button
-            android:id="@+id/btnAcceptFriends"
-            style="@style/ButtonsFino"
-            android:layout_width="140dp"
-            android:layout_marginBottom="18dp"
-            android:background="@drawable/buttons_bg"
-            android:onClick="AddFriends"
-            android:text="Accept Friends"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="30dp"/>
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inputAccept"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

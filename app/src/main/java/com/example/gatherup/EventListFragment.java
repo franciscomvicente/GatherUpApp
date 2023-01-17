@@ -112,4 +112,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         outputEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         outputEvents.setAdapter(adapter);
     }
+
+    public void refreshEvents(View view) {
+    }
 }
