@@ -31,6 +31,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
     private FirestoreAdapter adapter;
     private Location location;
+    private Timestamp currentTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,10 +43,50 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
         outputEvents = view.findViewById(R.id.outputEvents);
         store = FirebaseFirestore.getInstance();
+        currentTime = Timestamp.now();
 
-        Timestamp currentTime = Timestamp.now();
+        Paging();
 
-        //QUERY
+        return view;
+    }
+
+    @Override
+    public void onItemClick(DocumentSnapshot snapshot, int position) {
+        Log.d("ItemCLIECK", "ItemCLicked" + position + "AND THE ID:" + snapshot.getId());
+
+        EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
+        Bundle b = new Bundle();
+        b.putString("key", snapshot.getId());
+
+        eventSpecsFragment.setArguments(b);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+    }
+
+    private String distance(Location location, GeoPoint local) {
+        String distancia = " ";
+        float dist;
+        if (location != null) {
+            android.location.Location location1 = new android.location.Location("provider");
+            location1.setLatitude(location.getLatitude());
+            location1.setLongitude(location.getLongitude());
+
+            android.location.Location location2 = new android.location.Location("provider");
+            location2.setLatitude(local.getLatitude());
+            location2.setLongitude(local.getLongitude());
+            dist = location1.distanceTo(location2);
+            dist = Math.round(dist * 10) / 10.0f;
+            distancia = dist + "M";
+            if (dist > 999) {
+                dist = dist / 1000;
+                dist = Math.round(dist * 10) / 10.0f;
+                distancia = dist + "Km";
+            }
+        }
+        return distancia;
+    }
+
+    private void Paging(){
         Query query = store.collection("Events").orderBy("Date").whereGreaterThan("Date", currentTime);
 
         PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
@@ -70,46 +111,5 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         outputEvents.setHasFixedSize(true);
         outputEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         outputEvents.setAdapter(adapter);
-        return view;
-    }
-
-    @Override
-    public void onItemClick(DocumentSnapshot snapshot, int position) {
-        Log.d("ItemCLIECK", "ItemCLicked" + position + "AND THE ID:" + snapshot.getId());
-
-        EventSpecsFragment eventSpecsFragment = new EventSpecsFragment();
-        Bundle b = new Bundle();
-        b.putString("key", snapshot.getId());
-
-        eventSpecsFragment.setArguments(b);
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
-    }
-
-    private String distance(Location location, GeoPoint local) {
-        String distancia = " ";
-        float dist;
-        if(location != null) {
-            android.location.Location location1 = new android.location.Location("provider");
-            location1.setLatitude(location.getLatitude());
-            location1.setLongitude(location.getLongitude());
-
-            android.location.Location location2 = new android.location.Location("provider");
-            location2.setLatitude(local.getLatitude());
-            location2.setLongitude(local.getLongitude());
-            dist = location1.distanceTo(location2);
-            dist = Math.round(dist * 10) / 10.0f;
-            distancia = dist + "M";
-            if (dist > 999) {
-                dist = dist / 1000;
-                dist = Math.round(dist * 10) / 10.0f;
-                distancia = dist + "Km";
-            }
-        }
-        return distancia;
-    }
-
-    private void clearFields() {
-
     }
 }

@@ -45,10 +45,11 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
     private FirebaseUser user;
     private String userID;
     private ArrayList<String> friends;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_friends_list, container, false);
+        view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
         btnAddFriend = view.findViewById(R.id.btnAddFriend);
         inputFriendName = view.findViewById(R.id.inputFriendName);
@@ -58,6 +59,13 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
         user = auth.getCurrentUser();
         userID = user.getUid();
         friends = new ArrayList<>();
+
+        Query updated = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Done");
+        updated.addSnapshotListener((value, error) -> {
+            if (value != null) {
+                Filter();
+            }
+        });
 
         Filter();
 
@@ -102,6 +110,8 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
 
     public void Filter() {
         Query queryAux = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Done");
+        friends = new ArrayList<>();
+        System.out.println("");
         queryAux.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -111,7 +121,6 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
                     //if(eventIDs.size() < 10) {
                     friends.add(eventReference);
                     //}
-                    System.out.println(friends);
                 }
                 Query();
             } else {
@@ -138,16 +147,19 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
             }).build();
 
             adapter = new FriendsAdapter(options, this);
-            outputFriends.setHasFixedSize(true);
             outputFriends.setLayoutManager(new LinearLayoutManager(getContext()));
             outputFriends.setAdapter(adapter);
+
         } else {
-            System.out.println("ERRRRO");
+            adapter = new FriendsAdapter(new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Done"), new PagingConfig(3), snapshot -> null).build(),this);
+            outputFriends.setLayoutManager(new LinearLayoutManager(getContext()));
+            outputFriends.setAdapter(adapter);
         }
+
     }
 
     private void SearchPeople(String searchPeople) {
-        query = store.collection("Users").orderBy("Username").startAt(searchPeople).endAt(searchPeople+"\uf8ff").whereIn(FieldPath.documentId(), friends);
+        query = store.collection("Users").orderBy("Username").startAt(searchPeople).endAt(searchPeople + "\uf8ff").whereIn(FieldPath.documentId(), friends);
         FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, snapshot -> {
             FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
             String userID = snapshot.getId();
