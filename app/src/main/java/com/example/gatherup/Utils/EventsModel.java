@@ -2,6 +2,7 @@ package com.example.gatherup.Utils;
 
 import android.location.Location;
 
+import com.google.android.material.slider.BaseOnChangeListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -15,10 +16,11 @@ public class EventsModel {
     private String Distance;
     private String Theme;
     private Integer Subscribed;
+    private Boolean Private;
 
     private EventsModel() {}
 
-    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance, String Theme, Integer Subscribed){
+    private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance, String Theme, Boolean Private, Integer Subscribed){
         this.Title = Title;
         this.Date  = Date;
         this.eventID = eventID;
@@ -29,6 +31,7 @@ public class EventsModel {
         this.Distance = Distance;
         this.Theme = Theme;
         this.Subscribed = Subscribed;
+        this.Private = Private;
     }
 
     public String getTitle(){
@@ -110,5 +113,10 @@ public class EventsModel {
     public void setSubscribed(Integer Subscribed) {
         this.Subscribed = Subscribed;
     }
+
+    public void setPrivate()  {this.Private = Private;}
+
+    public Boolean getPrivate() {return Private;}
+
 
 }

@@ -163,9 +163,11 @@ public class MapsFragment extends Fragment implements /*LocationListener, */ OnM
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         EventsModel eventsModel = document.toObject(EventsModel.class);
-                        String eventID = document.getId();
-                        eventsModel.setEventID(eventID);
-                        list.add(eventsModel);
+                        if (eventsModel.getPrivate()==false){
+                            String eventID = document.getId();
+                            eventsModel.setEventID(eventID);
+                            list.add(eventsModel);
+                        }
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
