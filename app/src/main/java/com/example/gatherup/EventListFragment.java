@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,10 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 
-public class EventListFragment extends Fragment implements FirestoreAdapter.OnListItemClicked {
+public class EventListFragment extends Fragment implements FirestoreAdapter.OnListItemClicked, MainActivity.LocationCallback {
 
     private FirebaseFirestore store;
     private RecyclerView outputEvents;
+    private Button refreshButton;
 
     private FirestoreAdapter adapter;
     private Location location;
@@ -37,15 +39,23 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
 
-        if (getArguments() != null) {
-            location = getArguments().getParcelable("last_known_location");
-        }
+        MainActivity activity = (MainActivity) getActivity();
+        activity.setCallback(this);
+
+        location = activity.getCurrentLocation();
 
         outputEvents = view.findViewById(R.id.outputEvents);
+        refreshButton = view.findViewById(R.id.btnRefreshEventList);
         store = FirebaseFirestore.getInstance();
         currentTime = Timestamp.now();
 
         Paging();
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Paging();
+            }
+        });
 
         return view;
     }
@@ -113,6 +123,8 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
         outputEvents.setAdapter(adapter);
     }
 
-    public void refreshEvents(View view) {
+    @Override
+    public void onLocationChanged(Location currentLocation) {
+        location = currentLocation;
     }
 }
