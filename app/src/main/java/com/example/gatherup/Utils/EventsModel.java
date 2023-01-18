@@ -2,7 +2,6 @@ package com.example.gatherup.Utils;
 
 import android.location.Location;
 
-import com.google.android.material.slider.BaseOnChangeListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 
@@ -18,7 +17,7 @@ public class EventsModel {
     private Integer Subscribed;
     private Boolean Private;
 
-    private EventsModel() {}
+    public EventsModel() {}
 
     private EventsModel(String Title, Timestamp Date, String eventID, GeoPoint Local, String Description, String Address, Location Location, String Distance, String Theme, Boolean Private, Integer Subscribed){
         this.Title = Title;

@@ -85,6 +85,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private long mLastShakeTimestamp;
     private static final int SHAKE_TIME_LAPSE = 8000;
 
+    private NotificationListener notification;
+
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -122,6 +124,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         MainActivity activity = (MainActivity) getActivity();
         activity.setCallback(this);
 
+        notification = (NotificationListener) activity;
+
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -132,6 +136,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
 
         listaEventosButton = view.findViewById(R.id.ListButton);
         focusMeButton = view.findViewById(R.id.FocusMeButton);
+        Button teste = view.findViewById(R.id.FiltersButton);
         store = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -141,6 +146,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
             ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
 
+        teste.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notification.createNotification("18/01/2023 22:51",1,R.drawable.party,"FESTONA");
+                notification.createNotification("18/01/2023 22:52",2,R.drawable.food, "COMILANÇO");
+            }
+        });
         try {
             location = activity.getCurrentLocation();
         }catch (Exception e){
@@ -259,15 +271,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                     int avatar = 0;
                     String date = toDate(eventLocation);
                     snippet = eventLocation.getDescription() + " - " + date;
-                    if (eventLocation.getTheme().equals("Festa")) {
+                    if (eventLocation.getTheme().equals("Party")) {
                         avatar = R.drawable.party;
-                    } else if (eventLocation.getTheme().equals("Refeição")) {
+                    } else if (eventLocation.getTheme().equals("Meals")) {
                         avatar = R.drawable.food;
-                    } else if (eventLocation.getTheme().equals("Desporto")) {
+                    } else if (eventLocation.getTheme().equals("Sports")) {
                         avatar = R.drawable.sports;
-                    } else if (eventLocation.getTheme().equals("Convívio")) {
+                    } else if (eventLocation.getTheme().equals("Conviviality")) {
                         avatar = R.drawable.conviviality;
-                    } else if (eventLocation.getTheme().equals("Outros")) {
+                    } else if (eventLocation.getTheme().equals("Others")) {
                         avatar = R.drawable.other;
                     }
                     
@@ -458,7 +470,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
             if (currentTimestamp - mLastShakeTimestamp > SHAKE_TIME_LAPSE) {
                 mLastShakeTimestamp = currentTimestamp;
                 Toast.makeText(getContext(), "Events within 3Km", Toast.LENGTH_SHORT).show();
-                EventsShow();
+                if(location != null) {
+                    EventsShow();
+                }else{
+                    Toast.makeText(getContext(),"Localization not found!",Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(getContext(), "Wait a few until shake again", Toast.LENGTH_SHORT).show();
             }

@@ -84,9 +84,14 @@ public class EditEventFragment extends Fragment {
     Double latitude;
     String eventID;
 
+    private String time;
+    private String lastTitle;
+
     BottomNavigationView bottomNavigationView;
     private Uri imageUri;
 
+    private int icon;
+    private NotificationListener notification;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,6 +102,8 @@ public class EditEventFragment extends Fragment {
         eventID = getArguments().getString("key");
         Log.d("TAG", "TESTEEEE" + eventID);
 
+        MainActivity activity = (MainActivity) getActivity();
+        notification = (NotificationListener) activity;
 
         associateLayoutElements(view);
         load();
@@ -109,7 +116,7 @@ public class EditEventFragment extends Fragment {
         inputEventSpecs_Capacity.setMinValue(1);
         inputEventSpecs_Capacity.setMaxValue(100);
 
-        spinnerVals = new String[]{"Festa", "Desporto", "Refeição", "Convívio", "Outros"};
+        spinnerVals = new String[]{"Party", "Sports", "Meals", "Conviviality", "Others"};
         spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerVals);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inputEventSpecs_Theme.setAdapter(spinnerArrayAdapter);
@@ -212,7 +219,6 @@ public class EditEventFragment extends Fragment {
                     String date = toDate(value)[0];
                     String hours = toDate(value)[1];
 
-                    pickerVals = new String[]{"0:05m", "0:10m", "0:15m", "0:30m", "1h:00", "1h:30", "2h:00", "3h:00", "5h:00", "7h:00", "12h:00", "24h:00"};
                     inputEventSpecs_Duration.setMinValue(0);
                     inputEventSpecs_Duration.setMaxValue(11);
                     inputEventSpecs_Duration.setDisplayedValues(pickerVals);
@@ -240,6 +246,8 @@ public class EditEventFragment extends Fragment {
                     inputEventSpecs_Capacity.setValue((Integer) Objects.requireNonNull(value.getLong(("MaxCapacity"))).intValue());
                     inputEventSpecs_Date.setText(date);
                     inputEditEvent_Hours.setText(hours);
+
+                    time = inputEventSpecs_Date.getText().toString() + " " + inputEditEvent_Hours.getText().toString();
 
                     geoPoint = value.getGeoPoint("Local");
                     latitude = geoPoint.getLatitude();
@@ -323,11 +331,18 @@ public class EditEventFragment extends Fragment {
         });
 
         uploadImageToFirebase(imageUri);
+
+        checkIcon(theme);
+        notification.cancelNotification(makeID(time));
+        notification.createNotification(date + " " + hours, makeID(date + " " + hours), icon, title);
+
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
-        file.putFile(imageUri);
+        if (imageUri != null) {
+            StorageReference file = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
+            file.putFile(imageUri);
+        }
     }
 
     @Override
@@ -370,11 +385,35 @@ public class EditEventFragment extends Fragment {
     private void DeleteEvent() {
         btnDeleteEvent.setOnClickListener((view -> {
             store.collection("Events").document(eventID).delete();
+            notification.cancelNotification(makeID(time));
 
             MyProfileFragment myProfileFragment = new MyProfileFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.MainFragment, myProfileFragment).commit();
         }));
+    }
+
+    private void checkIcon(String theme) {
+        if (theme.equals("Party")) {
+            icon = R.drawable.party;
+        } else if (theme.equals("Sports")) {
+            icon = R.drawable.sports;
+        } else if (theme.equals("Meals")) {
+            icon = R.drawable.food;
+        } else if (theme.equals("Conviviality")) {
+            icon = R.drawable.conviviality;
+        } else if (theme.equals("Others")) {
+            icon = R.drawable.other;
+        }
+    }
+
+    private Integer makeID(String string) {
+        string = string.replace("/", "").replace(" ", "");
+        String[] parts = string.split(":");
+        String date = parts[0];
+        String time = parts[1];
+        String result = date.substring(0, 6) + time;
+        return Integer.parseInt(result);
     }
 }
 

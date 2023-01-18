@@ -85,10 +85,15 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
     private String[] pickerVals;
     private String[] spinnerVals;
     private ArrayAdapter<String> spinnerArrayAdapter;
+    private int icon;
+    private NotificationListener notification;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_event, container, false);
+
+        MainActivity activity = (MainActivity) getActivity();
+        notification = (NotificationListener) activity;
 
         bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
 
@@ -118,7 +123,7 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         inputCreateEvent_MaxCapacity.setMinValue(1);
         inputCreateEvent_MaxCapacity.setMaxValue(100);
 
-        spinnerVals = new String[]{"Festa", "Desporto", "Refeição", "Convívio", "Outros"};
+        spinnerVals = new String[]{"Party", "Sports", "Meals", "Conviviality", "Others"};
         spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerVals);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         inputCreateEvent_Theme.setAdapter(spinnerArrayAdapter);
@@ -140,6 +145,7 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
             } else {
                 PerformCreation();
                 Fragment mapsFragment = new MapsFragment();
+                clearFields();
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 bottomNavigationView.setSelectedItemId(R.id.map);
                 ft.replace(R.id.MainFragment, mapsFragment).commit();
@@ -230,7 +236,6 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         Timestamp timestamp = new Timestamp(parsedDate.getTime());
         format.format(timestamp);
 
-
         //PRIVATE OR NOT
         boolean private_event;
         if (inputCreateEvent_PrivateEvent.isChecked()) {
@@ -278,7 +283,7 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         DocumentReference ref = store.collection("Events").document(eventID);
         DocumentReference documentReference = store.collection("Users").document(userID).collection("Events").document(eventID);
         Map<String, Object> user = new HashMap<>();
-        user.put("Referência", ref);       //VERIFICAR ---------------
+        user.put("Referência", ref);
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -291,6 +296,9 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         } else {
             uploadDeafultImage();
         }
+
+        checkIcon(theme);
+        notification.createNotification(date + " " + hours,makeID(date + " " + hours),icon,title);
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
@@ -319,6 +327,7 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         inputCreateEvent_Local.setText("");
         inputCreateEvent_Description.setText("");
         inputCreateEvent_PrivateEvent.setText("");
+        inputCreateEvent_Hours.setText("");
     }
 
     private void localPicker() {
@@ -348,7 +357,6 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
                 latitude = addressData.getLatitude();
                 inputCreateEvent_Local.setText(address);
             } catch (Exception e) {
-                System.out.println("ERRO");
                 Log.e("MainActivity", e.getMessage());
             }
         }
@@ -358,7 +366,6 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
     @Override
     public void onLocationChanged(Location currentLocation) {
         location = currentLocation;
-        System.out.println("Mudei de sitio");
     }
 
     @Override
@@ -366,5 +373,28 @@ public class CreateEventFragment extends Fragment implements MainActivity.Locati
         super.onDestroyView();
         MainActivity activity = (MainActivity) getActivity();
         activity.setCallback(null);
+    }
+
+    private void checkIcon(String theme){
+        if(theme.equals("Party")){
+            icon = R.drawable.party;
+        }else if(theme.equals("Sports")){
+            icon = R.drawable.sports;
+        }else if(theme.equals("Meals")){
+            icon = R.drawable.food;
+        }else if(theme.equals("Conviviality")){
+            icon = R.drawable.conviviality;
+        }else if(theme.equals("Others")){
+            icon = R.drawable.other;
+        }
+    }
+
+    private Integer makeID(String string) {
+        string = string.replace("/", "").replace(" ", "");
+        String[] parts = string.split(":");
+        String date = parts[0];
+        String time = parts[1];
+        String result = date.substring(0,6)+time;
+        return Integer.parseInt(result);
     }
 }

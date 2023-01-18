@@ -29,7 +29,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +51,13 @@ public class EventSpecsFragment extends Fragment {
     private long subscribed;
     private long maxcapacity;
 
+    private String title;
+    private String date;
+    private String theme;
+    private int icon;
+
+    private NotificationListener notification;
+
     StorageReference storageReference;
 
     @Override
@@ -57,6 +66,9 @@ public class EventSpecsFragment extends Fragment {
 
         //GET EVENT_ID
         String eventID = getArguments().getString("key");
+
+        MainActivity activity = (MainActivity) getActivity();
+        notification = (NotificationListener) activity;
 
         btnEvent = view.findViewById(R.id.btnEvent);
         btnGroupChat = view.findViewById(R.id.btnGroupChat);
@@ -85,10 +97,13 @@ public class EventSpecsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 try {
-                    String date = toDate(value);
+                    date = toDate(value);
                     maxcapacity = value.getLong("MaxCapacity");
                     subscribed = value.getLong("Subscribed");
                     String capacity = subscribed + "/" + maxcapacity;
+
+                    title = value.getString("Title");
+                    theme = value.getString("Theme");
 
                     outputEventSpecs_Title.setText(value.getString("Title"));
                     outputEventSpecs_Local.setText(value.getString("Address"));
@@ -159,6 +174,17 @@ public class EventSpecsFragment extends Fragment {
             }
         });
 
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        Date parsedDate = null;
+        try {
+            parsedDate = format.parse(outputEventSpecs_Date.getText().toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        checkIcon(theme);
+        notification.createNotification(date,makeID(date),icon,title);
+
         CheckRegistered(eventID);
     }
 
@@ -173,6 +199,8 @@ public class EventSpecsFragment extends Fragment {
 
         store.collection("Events").document(eventID).collection("Participants").document(userID).delete();
         store.collection("Events").document(eventID).update("Subscribed", FieldValue.increment(-1));
+
+        notification.cancelNotification(makeID(date));
 
         CheckRegistered(eventID);
     }
@@ -237,5 +265,28 @@ public class EventSpecsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    private void checkIcon(String theme){
+        if(theme.equals("Party")){
+            icon = R.drawable.party;
+        }else if(theme.equals("Sports")){
+            icon = R.drawable.sports;
+        }else if(theme.equals("Meals")){
+            icon = R.drawable.food;
+        }else if(theme.equals("Conviviality")){
+            icon = R.drawable.conviviality;
+        }else if(theme.equals("Others")){
+            icon = R.drawable.other;
+        }
+    }
+
+    private Integer makeID(String string) {
+        string = string.replace("/", "").replace(" ", "");
+        String[] parts = string.split(":");
+        String date = parts[0];
+        String time = parts[1];
+        String result = date.substring(0,6)+time;
+        return Integer.parseInt(result);
     }
 }
