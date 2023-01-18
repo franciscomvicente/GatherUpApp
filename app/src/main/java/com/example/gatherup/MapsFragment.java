@@ -63,12 +63,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private FirebaseFirestore store;
     private ArrayList<EventsModel> list;
     private ArrayList<EventsModel> shownevents;
-
+    private ArrayList<EventsModel> filteredEvents;
     private GoogleMap mMap;
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private boolean flagLocation = false;
     Marker markername;
     Button listaEventosButton;
+    Button btnFiltros;
     FloatingActionButton focusMeButton;
     private Location location;
     private StorageReference storageReference;
@@ -85,7 +86,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private long mLastShakeTimestamp;
     private static final int SHAKE_TIME_LAPSE = 8000;
 
-    private NotificationListener notification;
+    private String filter;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -124,7 +125,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         MainActivity activity = (MainActivity) getActivity();
         activity.setCallback(this);
 
-        notification = (NotificationListener) activity;
+        if(getArguments() != null){
+            filter = getArguments().getString("filter");
+        }
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -136,7 +139,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
 
         listaEventosButton = view.findViewById(R.id.ListButton);
         focusMeButton = view.findViewById(R.id.FocusMeButton);
-        Button teste = view.findViewById(R.id.FiltersButton);
         store = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -146,13 +148,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
             ft.replace(R.id.MainFragment, eventListFragment).addToBackStack(null).commit();
         });
 
-        teste.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notification.createNotification("18/01/2023 22:51",1,R.drawable.party,"FESTONA");
-                notification.createNotification("18/01/2023 22:52",2,R.drawable.food, "COMILANÇO");
-            }
-        });
         try {
             location = activity.getCurrentLocation();
         }catch (Exception e){
@@ -163,6 +158,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         });
 
         Timestamp currentTime = Timestamp.now();
+
         store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -178,10 +174,32 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                shownevents = list;
+
+                filteredEvents = new ArrayList<>();
+                if(filter != null){
+                    System.out.println(filter);
+                    for(int i = 0; i < list.size(); i++){
+                        if(filter.equals(list.get(i).getTheme())){
+                            System.out.println(list.get(i).getTitle());
+                            filteredEvents.add(list.get(i));
+                        }
+                    }
+                }
+                else{
+                    filteredEvents = list;
+                }
                 addMapMarkers();
             }
         });
+
+
+        btnFiltros = view.findViewById(R.id.FiltersButton);
+        btnFiltros.setOnClickListener(view1 -> {
+            FiltersFragment filtersFragment = new FiltersFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainFragment, filtersFragment).commit();
+        });
+
         return view;
     }
 
@@ -265,7 +283,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                 );
                 mClusterManager.setRenderer(mClusterManagerRenderer);
             }
-            for (EventsModel eventLocation : shownevents) {
+            for (EventsModel eventLocation : filteredEvents) {
                 try {
                     String snippet = "";
                     int avatar = 0;
@@ -501,7 +519,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private void EventsShow() {
         UpdateDistance();
         shownevents = new ArrayList<>();
-        for (EventsModel eventsModel : list) {
+        for (EventsModel eventsModel : filteredEvents) {
             String distance = eventsModel.getDistance();
             String[] parts = distance.split("[a-zA-Z]+");
             double distanceNumber = Double.parseDouble(parts[0]);
