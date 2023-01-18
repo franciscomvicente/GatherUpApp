@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FiltersFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_by_theme"
+            app:layout_constraintBottom_toTopOf="@+id/filterByTheme"
+            app:layout_constraintStart_toStartOf="@+id/filterByTheme"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="375dp"/>
+
+        <Spinner
+            android:id="@+id/filterByTheme"
+            style="@style/Inputs"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/fields_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnConfirmFilter"
+            android:background="@drawable/buttons_bg"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm_filter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterByTheme" />
+
+        <Button
+            android:id="@+id/btnClearFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/buttons_bg"
+            android:text="@string/clear"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnConfirmFilter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
