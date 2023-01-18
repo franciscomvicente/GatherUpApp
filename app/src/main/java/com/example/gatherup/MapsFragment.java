@@ -63,7 +63,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private FirebaseFirestore store;
     private ArrayList<EventsModel> list;
     private ArrayList<EventsModel> shownevents;
-
+    private ArrayList<EventsModel> filteredEvents;
     private GoogleMap mMap;
     private static final int REQUEST_CHECK_SETTINGS = 100;
     private boolean flagLocation = false;
@@ -160,50 +160,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
 
         Timestamp currentTime = Timestamp.now();
 
-        if(filter != null){
-            System.out.println("Filtro: " + filter);
-            //.whereGreaterThan("Date", currentTime)
-            store.collection("Events").whereEqualTo("Theme", filter).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            EventsModel eventsModel = document.toObject(EventsModel.class);
-                            if (eventsModel.getPrivate()==false){
-                                String eventID = document.getId();
-                                eventsModel.setEventID(eventID);
-                                list.add(eventsModel);
-                            }
+        store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        EventsModel eventsModel = document.toObject(EventsModel.class);
+                        if (eventsModel.getPrivate()==false){
+                            String eventID = document.getId();
+                            eventsModel.setEventID(eventID);
+                            list.add(eventsModel);
                         }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                    shownevents = list;
-                    addMapMarkers();
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-            });
-        }
-        else{
-            store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            EventsModel eventsModel = document.toObject(EventsModel.class);
-                            if (eventsModel.getPrivate()==false){
-                                String eventID = document.getId();
-                                eventsModel.setEventID(eventID);
-                                list.add(eventsModel);
-                            }
+
+                filteredEvents = new ArrayList<>();
+                if(filter != null){
+                    System.out.println(filter);
+                    for(int i = 0; i < list.size(); i++){
+                        if(filter.equals(list.get(i).getTheme())){
+                            System.out.println(list.get(i).getTitle());
+                            filteredEvents.add(list.get(i));
                         }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                    shownevents = list;
-                    addMapMarkers();
                 }
-            });
-        }
+                else{
+                    filteredEvents = list;
+                }
+                addMapMarkers();
+            }
+        });
+
 
         btnFiltros = view.findViewById(R.id.FiltersButton);
         btnFiltros.setOnClickListener(view1 -> {
@@ -295,7 +284,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                 );
                 mClusterManager.setRenderer(mClusterManagerRenderer);
             }
-            for (EventsModel eventLocation : shownevents) {
+            for (EventsModel eventLocation : filteredEvents) {
                 try {
                     String snippet = "";
                     int avatar = 0;
@@ -527,7 +516,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private void EventsShow() {
         UpdateDistance();
         shownevents = new ArrayList<>();
-        for (EventsModel eventsModel : list) {
+        for (EventsModel eventsModel : filteredEvents) {
             String distance = eventsModel.getDistance();
             String[] parts = distance.split("[a-zA-Z]+");
             double distanceNumber = Double.parseDouble(parts[0]);
