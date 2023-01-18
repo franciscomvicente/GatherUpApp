@@ -24,5 +24,8 @@
     <string name="email">Email</string>
     <string name="confirm_edition">Confirm Edition</string>
     <string name="delete">Delete</string>
+    <string name="filter_by_theme">Filter by theme:</string>
+    <string name="confirm_filter">Confirm Filter</string>
+    <string name="clear">Clear</string>
 
 </resources>

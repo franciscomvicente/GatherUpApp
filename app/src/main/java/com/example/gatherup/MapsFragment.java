@@ -69,6 +69,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private boolean flagLocation = false;
     Marker markername;
     Button listaEventosButton;
+    Button btnFiltros;
     FloatingActionButton focusMeButton;
     private Location location;
     private StorageReference storageReference;
@@ -84,6 +85,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
     private float mAccelLast;
     private long mLastShakeTimestamp;
     private static final int SHAKE_TIME_LAPSE = 8000;
+
+    private String filter;
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -122,6 +125,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         MainActivity activity = (MainActivity) getActivity();
         activity.setCallback(this);
 
+        if(getArguments() != null){
+            filter = getArguments().getString("filter");
+        }
+        //System.out.println("FILTRO: " + filter);
+
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
@@ -151,25 +159,59 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         });
 
         Timestamp currentTime = Timestamp.now();
-        store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        EventsModel eventsModel = document.toObject(EventsModel.class);
-                        if (eventsModel.getPrivate()==false){
-                            String eventID = document.getId();
-                            eventsModel.setEventID(eventID);
-                            list.add(eventsModel);
+
+        if(filter != null){
+            System.out.println("Filtro: " + filter);
+            //.whereGreaterThan("Date", currentTime)
+            store.collection("Events").whereEqualTo("Theme", filter).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            EventsModel eventsModel = document.toObject(EventsModel.class);
+                            if (eventsModel.getPrivate()==false){
+                                String eventID = document.getId();
+                                eventsModel.setEventID(eventID);
+                                list.add(eventsModel);
+                            }
                         }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
+                    shownevents = list;
+                    addMapMarkers();
                 }
-                shownevents = list;
-                addMapMarkers();
-            }
+            });
+        }
+        else{
+            store.collection("Events").whereGreaterThan("Date", currentTime).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            EventsModel eventsModel = document.toObject(EventsModel.class);
+                            if (eventsModel.getPrivate()==false){
+                                String eventID = document.getId();
+                                eventsModel.setEventID(eventID);
+                                list.add(eventsModel);
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
+                    }
+                    shownevents = list;
+                    addMapMarkers();
+                }
+            });
+        }
+
+        btnFiltros = view.findViewById(R.id.FiltersButton);
+        btnFiltros.setOnClickListener(view1 -> {
+            FiltersFragment filtersFragment = new FiltersFragment();
+            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.MainFragment, filtersFragment).commit();
         });
+
         return view;
     }
 
