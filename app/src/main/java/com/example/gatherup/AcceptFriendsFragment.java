@@ -60,6 +60,27 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
 
 
         Query updated = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
+
+
+        inputAccept.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String searchPeople = s.toString();
+                /*SearchPeople(searchPeople);*/
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
         updated.addSnapshotListener((value, error) -> {
             if (value != null) {
                 Filter();
@@ -118,9 +139,6 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
                     String userID = snapshot.getId();
                     System.out.println(userID);
                     findFriendsModel.setUserID(userID);
-                    System.out.println(userID);
-                    System.out.println("ola");
-                    System.out.println("ola");
                     return findFriendsModel;
                 }
             }).build();
@@ -136,6 +154,20 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         }
 
     }
+
+    /*private void SearchPeople(String searchPeople) {
+        query = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status","Requested").startAt(searchPeople).endAt(searchPeople + "\uf8ff");
+
+        FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, snapshot -> {
+            FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
+            String userID = snapshot.getId();
+            findFriendsModel.setUserID(userID);
+            return findFriendsModel;
+        }).build();
+
+        adapter = new RequestFriendsAdapter(options, this);
+        outputAccept.setAdapter(adapter);
+    }*/
 
 
 }
