@@ -1,17 +1,15 @@
 package com.example.gatherup;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 public class FiltersFragment extends Fragment {
     private Spinner filterByTheme;
@@ -30,7 +28,7 @@ public class FiltersFragment extends Fragment {
         btnconfirmFilter = view.findViewById(R.id.btnConfirmFilter);
         btnClearFilter = view.findViewById(R.id.btnClearFilter);
 
-        spinnerVals = new String[]{"Festa", "Desporto", "Refeição", "Convívio", "Outros"};
+        spinnerVals = new String[]{"Party", "Sports", "Meals", "Conviviality", "Others"};
         spinnerArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, spinnerVals);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         filterByTheme.setAdapter(spinnerArrayAdapter);
