@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         Intent intent = new Intent(MainActivity.this,EventCheckReceiver.class);
         intent.putExtra("title", title);
         intent.putExtra("icon", icon);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,id,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,id,intent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     public void cancelNotification(Integer id){
         Intent intent = new Intent(MainActivity.this,EventCheckReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,id,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,id,intent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         System.out.println("NOTIFICATION REMOVED");

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -153,6 +154,12 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
 
     @Override
     public void onItemClick(DocumentSnapshot snapshot, int position) {
+        ProfileFragment profileFragment = new ProfileFragment();
+        Bundle p = new Bundle();
+        p.putString("User_key", snapshot.getId());
 
+        profileFragment.setArguments(p);
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
     }
 }

@@ -334,7 +334,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
 
                     eventSpecsFragment.setArguments(b);
                     FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+                    ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("map").commit();
                 }
             });
             mClusterManager.cluster();
