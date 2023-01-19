@@ -108,7 +108,7 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
         btnEditProfile.setOnClickListener(view1 -> {
             Fragment editProfileFragment = new EditPerfilFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, editProfileFragment).commit();
+            ft.replace(R.id.MainFragment, editProfileFragment).addToBackStack("myprofile").commit();
         });
 
         //RecyclerView eventosQueParticipa
@@ -215,6 +215,6 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
         eventSpecsFragment.setArguments(b);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("myprofile").commit();
     }
 }

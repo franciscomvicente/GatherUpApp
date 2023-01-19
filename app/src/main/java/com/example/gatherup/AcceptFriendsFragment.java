@@ -16,9 +16,7 @@ import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gatherup.Utils.FindFriendsAdapter;
 import com.example.gatherup.Utils.FindFriendsModel;
-import com.example.gatherup.Utils.FriendsAdapter;
 import com.example.gatherup.Utils.RequestFriendsAdapter;
 import com.firebase.ui.firestore.SnapshotParser;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -100,7 +98,7 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
 
         profileFragment.setArguments(p);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
+        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("friendsrequest_list").commit();
     }
 
 

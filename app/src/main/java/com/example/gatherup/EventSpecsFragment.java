@@ -143,7 +143,7 @@ public class EventSpecsFragment extends Fragment {
 
             chatFragment.setArguments(b);
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, chatFragment).addToBackStack(null).commit(); // addToBackStack(null) back to last fragment with bugs
+            ft.replace(R.id.MainFragment, chatFragment).addToBackStack("event_specs").commit(); // addToBackStack(null) back to last fragment with bugs
         });
 
         return view;

@@ -27,10 +27,10 @@
 
         <TextView
             android:id="@+id/txtFindPeople"
-            android:layout_width="115dp"
-            android:layout_height="0dp"
-            android:text="Encontrar Amigo"
+            android:layout_width="80dp"
+            android:layout_height="18dp"
             android:layout_marginTop="10dp"
+            android:text="Find Friend"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

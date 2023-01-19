@@ -197,7 +197,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         btnFiltros.setOnClickListener(view1 -> {
             FiltersFragment filtersFragment = new FiltersFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, filtersFragment).commit();
+            ft.replace(R.id.MainFragment, filtersFragment).addToBackStack("map").commit();
         });
 
         return view;

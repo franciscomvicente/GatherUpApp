@@ -116,7 +116,7 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
 
         profileFragment.setArguments(p);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
+        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("addfriends_list").commit();
     }
 
 

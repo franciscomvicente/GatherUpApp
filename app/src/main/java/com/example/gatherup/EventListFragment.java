@@ -70,7 +70,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
 
         eventSpecsFragment.setArguments(b);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("teste").commit();
+        ft.replace(R.id.MainFragment, eventSpecsFragment).addToBackStack("event_list").commit();
     }
 
     private String distance(Location location, GeoPoint local) {

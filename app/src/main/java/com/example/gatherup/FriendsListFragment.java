@@ -91,13 +91,13 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
         btnAddFriend.setOnClickListener(view1 -> {
             Fragment addFriendsFragment = new AddFriendsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, addFriendsFragment).commit();
+            ft.replace(R.id.MainFragment, addFriendsFragment).addToBackStack("friends_list").commit();
         });
 
         btnAcceptFriend.setOnClickListener(view1 -> {
             Fragment acceptFriendsFragment = new AcceptFriendsFragment();
             FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.MainFragment, acceptFriendsFragment).commit();
+            ft.replace(R.id.MainFragment, acceptFriendsFragment).addToBackStack("friends_list").commit();
         });
 
         return view;
@@ -113,7 +113,7 @@ public class FriendsListFragment extends Fragment implements FriendsAdapter.OnLi
 
         profileFragment.setArguments(p);
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("try").commit();
+        ft.replace(R.id.MainFragment, profileFragment).addToBackStack("friends_list").commit();
     }
 
     public void Filter() {
