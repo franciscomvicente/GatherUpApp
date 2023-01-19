@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ChatFragment">
+    tools:context=".ParticipantsFragment">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/SoftBlue">
@@ -15,7 +15,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/LightBlue">
+            android:background="@color/LightBlue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,57 +45,29 @@
                     android:id="@+id/outputChat_Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
                     android:layout_toEndOf="@+id/chatCardView"
                     android:text="Group Title"
-                    android:layout_marginStart="10dp"
-                    android:layout_centerVertical="true"
                     android:textColor="@color/White"
                     android:textSize="18dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatRv"
+            android:id="@+id/eventParticipants"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:layout_above="@+id/chatLayout"
-            tools:listitem="@layout/row_eventchat_left"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-        <LinearLayout
-            android:id="@+id/chatLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:background="@color/White"
-            android:layout_alignParentBottom="true">
-            <EditText
-                android:id="@+id/inputMessage"
-                android:layout_marginStart="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Start typing here..."
-                android:inputType="textCapSentences|textMultiLine"
-                android:layout_weight="1"/>
-            <ImageButton
-                android:id="@+id/btnSendMessage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_send"
-                android:background="@null"/>
-
-        </LinearLayout>
-
-    </RelativeLayout>
+            android:layout_height="833dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <!--
