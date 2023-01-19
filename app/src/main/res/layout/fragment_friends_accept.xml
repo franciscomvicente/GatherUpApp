@@ -30,7 +30,8 @@
             android:layout_width="94dp"
             android:layout_height="17dp"
             android:layout_marginTop="10dp"
-            android:text="Find Requests"
+            android:text="Requests"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

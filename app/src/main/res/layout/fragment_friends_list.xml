@@ -27,10 +27,11 @@
 
         <TextView
             android:id="@+id/txtFindFriend"
-            android:layout_width="81dp"
-            android:layout_height="20dp"
+            android:layout_width="118dp"
+            android:layout_height="19dp"
             android:layout_marginTop="10dp"
-            android:text="Find Friends"
+            android:text="Friends"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +54,7 @@
             android:background="@drawable/buttons_bg"
             android:onClick="AddFriends"
             android:layout_marginBottom="18dp"
-            android:text="Add Friends"
+            android:text="Search"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="30dp"/>
@@ -66,7 +67,7 @@
             android:layout_marginBottom="18dp"
             android:background="@drawable/buttons_bg"
             android:onClick="AddFriends"
-            android:text="Friends Request"
+            android:text="Request's"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
