@@ -137,7 +137,7 @@ public class EventSpecsFragment extends Fragment {
         CheckRegistered(eventID);
 
         btnGroupChat.setOnClickListener(view1 -> {
-            Fragment chatFragment = new ChatFragment();
+            Fragment chatFragment = new ParticipantsFragment();
             Bundle b = new Bundle();
             b.putString("EventID", eventID);
 
