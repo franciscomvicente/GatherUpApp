@@ -32,7 +32,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -85,9 +84,6 @@ public class EditEventFragment extends Fragment {
     String eventID;
 
     private String time;
-    private String lastTitle;
-
-    BottomNavigationView bottomNavigationView;
     private Uri imageUri;
 
     private int icon;
@@ -100,7 +96,6 @@ public class EditEventFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_event, container, false);
         //GET EVENT_ID
         eventID = getArguments().getString("key");
-        Log.d("TAG", "TESTEEEE" + eventID);
 
         MainActivity activity = (MainActivity) getActivity();
         notification = (NotificationListener) activity;
@@ -173,11 +168,9 @@ public class EditEventFragment extends Fragment {
             }, hour, minutes, true);
             timePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             timePickerDialog.show();
-
         });
 
         inputEventSpecs_Local.setOnClickListener(v -> localPicker());
-
         DeleteEvent();
 
         return view;
@@ -255,7 +248,6 @@ public class EditEventFragment extends Fragment {
                     address = value.getString("Address");
 
                 } catch (Exception e) {
-                    System.out.println(e);
                 }
             }
         });
@@ -376,7 +368,6 @@ public class EditEventFragment extends Fragment {
                 latitude = addressData.getLatitude();
                 inputEventSpecs_Local.setText(address);
             } catch (Exception e) {
-                System.out.println("ERRO");
                 Log.e("MainActivity", e.getMessage());
             }
         }

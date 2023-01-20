@@ -3,7 +3,6 @@ package com.example.gatherup;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +77,6 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
             public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                 FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
                 String userID = snapshot.getId();
-                System.out.println(userID);
                 findFriendsModel.setUserID(userID);
                 return findFriendsModel;
             }
@@ -108,8 +106,6 @@ public class AddFriendsFragment extends Fragment implements FindFriendsAdapter.O
 
     @Override
     public void onItemClick(DocumentSnapshot snapshot, int position) {
-        Log.d("ItemCLIECK","ItemCLicked" + position + "AND THE ID:" + snapshot.getId());
-
         ProfileFragment profileFragment = new ProfileFragment();
         Bundle p = new Bundle();
         p.putString("User_key", snapshot.getId());

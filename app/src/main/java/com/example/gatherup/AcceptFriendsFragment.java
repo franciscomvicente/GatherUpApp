@@ -55,10 +55,7 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         user = auth.getCurrentUser();
         userID = user.getUid();
 
-
-
         Query updated = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
-
 
         inputAccept.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,7 +66,6 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchPeople = s.toString();
-                /*SearchPeople(searchPeople);*/
             }
 
             @Override
@@ -78,7 +74,6 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
             }
         });
 
-
         updated.addSnapshotListener((value, error) -> {
             if (value != null) {
                 Filter();
@@ -86,7 +81,6 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         });
         return view;
     }
-
 
     @Override
     public void onItemClick(DocumentSnapshot snapshot, int position) {
@@ -101,27 +95,20 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
         ft.replace(R.id.MainFragment, profileFragment).addToBackStack("friendsrequest_list").commit();
     }
 
-
     public void Filter() {
         Query queryAux = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status", "Requested");
         friendRequests = new ArrayList<>();
-        System.out.println("");
         queryAux.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    System.out.println("document.getData(): " + document.getData());
                     String eventReference = document.getId();
-                    System.out.println(eventReference);
-                    //if(eventIDs.size() < 10) {
                     friendRequests.add(eventReference);
-                    //}
                 }
                 Query();
             } else {
                 Log.d("TAG", "Error getting event references: ", task.getException());
             }
         });
-
     }
 
     public void Query() {
@@ -135,7 +122,6 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
                 public FindFriendsModel parseSnapshot(@NonNull DocumentSnapshot snapshot) {
                     FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
                     String userID = snapshot.getId();
-                    System.out.println(userID);
                     findFriendsModel.setUserID(userID);
                     return findFriendsModel;
                 }
@@ -150,22 +136,5 @@ public class AcceptFriendsFragment extends Fragment implements RequestFriendsAda
             outputAccept.setLayoutManager(new LinearLayoutManager(getContext()));
             outputAccept.setAdapter(adapter);
         }
-
     }
-
-    /*private void SearchPeople(String searchPeople) {
-        query = store.collection("Users").document(userID).collection("Friends").whereEqualTo("Status","Requested").startAt(searchPeople).endAt(searchPeople + "\uf8ff");
-
-        FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, snapshot -> {
-            FindFriendsModel findFriendsModel = snapshot.toObject(FindFriendsModel.class);
-            String userID = snapshot.getId();
-            findFriendsModel.setUserID(userID);
-            return findFriendsModel;
-        }).build();
-
-        adapter = new RequestFriendsAdapter(options, this);
-        outputAccept.setAdapter(adapter);
-    }*/
-
-
 }
