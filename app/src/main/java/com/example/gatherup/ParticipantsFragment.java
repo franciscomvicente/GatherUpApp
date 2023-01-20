@@ -48,8 +48,6 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
     Toolbar toolbar;
     ImageView outputChat_EventPhoto;
     TextView outputChat_Title;
-    EditText inputMessage;
-    ImageButton btnSendMessage;
     RecyclerView eventParticipants;
     private FriendsAdapter adapter;
 
@@ -67,7 +65,6 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
 
         //GET EVENT_ID
         eventID = getArguments().getString("EventID");
-        Log.d("TAG","TESTEEEE"+ eventID);
 
         toolbar = view.findViewById(R.id.toolbar);
         outputChat_EventPhoto = view.findViewById(R.id.outputChat_EventPhoto);
@@ -83,7 +80,6 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
         participantsIDs = new ArrayList<>();
         //RecyclerView eventosQueParticipa
         eventParticipants = view.findViewById(R.id.eventParticipants);
-        System.out.println("Antes");
 
         Query queryAux = store.collection("Events").document(eventID).collection("Participants");
 
@@ -92,19 +88,13 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        System.out.println("document.getData(): " + document.getData());
                         String eventReference = document.getId();
                         if(participantsIDs.size() < 10) {
                             participantsIDs.add(eventReference);
-                            System.out.println(eventReference);
                         }
                     }
-                    System.out.println(participantsIDs);
                     getIds();
-                } else {
-                    Log.d("TAG", "Error getting event references: ", task.getException());
                 }
-
             }
         });
 
@@ -130,7 +120,7 @@ public class ParticipantsFragment extends Fragment implements FriendsAdapter.OnL
         if(!participantsIDs.isEmpty()){
             Query query = store.collection("Users").whereIn(FieldPath.documentId(), participantsIDs);
 
-            PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+            PagingConfig config = new PagingConfig(3);
 
             //PAGING OPTIONS
             FirestorePagingOptions<FindFriendsModel> options = new FirestorePagingOptions.Builder<FindFriendsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<FindFriendsModel>() {

@@ -171,16 +171,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                             list.add(eventsModel);
                         }
                     }
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
 
                 filteredEvents = new ArrayList<>();
                 if(filter != null){
-                    System.out.println(filter);
                     for(int i = 0; i < list.size(); i++){
                         if(filter.equals(list.get(i).getTheme())){
-                            System.out.println(list.get(i).getTitle());
                             filteredEvents.add(list.get(i));
                         }
                     }
@@ -227,18 +223,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
         }
     }
 
-    /*
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        markername.remove();
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        markername.remove();
-        DisplayLocation(location);
-    }
-
-     */
-
     public void DisplayLocation() {
         LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
         if (markername != null) {
@@ -253,7 +237,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                     flagLocation = true;
                 }
             } catch (Exception e) {
-                System.out.println("Errei " + e); //ERRO
             }
         }
         if (location == null) {
@@ -300,13 +283,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                     } else if (eventLocation.getTheme().equals("Others")) {
                         avatar = R.drawable.other;
                     }
-                    
-                    //System.out.println(eventLocation.getTitle() + "---" + eventLocation.getDescription() + "---" + eventLocation.getEventID());
-                    try {
-                        //avatar = Integer.parseInt(eventLocation.getUser().getAvatar());
-                    } catch (NumberFormatException e) {
-                        //Log.d(TAG, "addMapMarkers; no avatar for: " + eventLocation.getUser().getUsername() + ", setting default");
-                    }
+
+
                     ClusterMarker newClusterMarker = new ClusterMarker(
                             new LatLng(eventLocation.getLocal().getLatitude(), eventLocation.getLocal().getLongitude()),
                             eventLocation.getTitle(),
@@ -319,7 +297,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                     mClusterMarkers.add(newClusterMarker);
 
                 } catch (NullPointerException e) {
-                    Log.e(TAG, "addMapMarkers: NullPointerException: " + e.getMessage());
                 }
             }
 
@@ -340,91 +317,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
             mClusterManager.cluster();
         }
     }
-
-    /*
-    private boolean checkMapServices() {
-        if (isServicesOK()) {
-            if (isMapsEnabled()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("This application requires GPS to work properly, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        Intent enableGpsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        someActivityResultLauncher.launch(enableGpsIntent);
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public boolean isMapsEnabled() {
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildAlertMessageNoGps();
-            return false;
-        }
-        return true;
-    }
-
-    private void getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mLocationPermissionGranted = true;
-            //getChatrooms();
-            //getUserDetails();
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
-    }
-
-    public boolean isServicesOK() {
-        Log.d(TAG, "isServicesOK: checking google services version");
-
-        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
-
-        if (available == ConnectionResult.SUCCESS) {
-            //everything is fine and the user can make map requests
-            Log.d(TAG, "isServicesOK: Google Play Services is working");
-            return true;
-        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
-            //an error occured but we can resolve it
-            Log.d(TAG, "isServicesOK: an error occured but we can fix it");
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
-            dialog.show();
-        } else {
-            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
-        }
-        return false;
-    }
-
-
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: called.");
-            switch (result.getResultCode()) {
-                case PERMISSIONS_REQUEST_ENABLE_GPS: {
-                    if (mLocationPermissionGranted) {
-                        //getChatrooms();
-                        //getUserDetails();
-                    } else {
-                        getLocationPermission();
-                    }
-                }
-            }
-        }
-    });
-
-     */
 
     private String toDate(EventsModel value) {
         Timestamp timestamp = value.getDate();

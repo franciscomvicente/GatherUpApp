@@ -105,7 +105,6 @@ public class EditPerfilFragment extends Fragment {
             someActivityResultLauncher.launch(openGallery);
         });
 
-        //DATE PICKER
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
@@ -147,7 +146,7 @@ public class EditPerfilFragment extends Fragment {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();                             //ORIGEM
+                Intent data = result.getData();
                 Uri imageUri = data.getData();
                 uploadImageToFirebase(imageUri);
             }

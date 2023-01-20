@@ -64,7 +64,6 @@ public class EventSpecsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_specs, container, false);
 
-        //GET EVENT_ID
         String eventID = getArguments().getString("key");
 
         MainActivity activity = (MainActivity) getActivity();
@@ -87,7 +86,6 @@ public class EventSpecsFragment extends Fragment {
         store = FirebaseFirestore.getInstance();
         userID = user.getUid();
 
-        //EVENT PHOTO
         storageReference = FirebaseStorage.getInstance().getReference();
         StorageReference eventPhoto = storageReference.child("Events/" + eventID + "/eventPhoto.jpg");
         eventPhoto.getDownloadUrl().addOnSuccessListener(uri -> Picasso.get().load(uri).into(outputEventsSpecs_EventPhoto));
@@ -129,7 +127,6 @@ public class EventSpecsFragment extends Fragment {
                         }
                     });
                 }catch (Exception e){
-                    System.out.println("ERROR");
                 }
             }
         });

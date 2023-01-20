@@ -67,7 +67,6 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         String profileID = getArguments().getString("User_key");
-        Log.d("TAG","TESTEEEE"+ profileID);
 
         outputUsername = view.findViewById(R.id.outputSUsername);
         outputBio = view.findViewById(R.id.outputSBio);
@@ -144,7 +143,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
         if (!eventIDs.isEmpty()) {
             Query query = store.collection("Events").whereIn(FieldPath.documentId(), eventIDs);
 
-            PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+            PagingConfig config = new PagingConfig(3);
 
             //PAGING OPTIONS
             FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<EventsModel>() {
@@ -187,10 +186,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
                         }
                         System.out.println(eventIDs);
                         getIds();
-                    } else {
-                        Log.d("TAG", "Error getting event references: ", task.getException());
                     }
-
                 }
             });
 
@@ -198,7 +194,7 @@ public class ProfileFragment extends Fragment implements FirestoreAdapter.OnList
             //QUERYHOST
             Query queryHost = store.collection("Events").whereEqualTo("CreatorID", profileID);
 
-            PagingConfig configHost = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+            PagingConfig configHost = new PagingConfig(3);
 
             //PAGING OPTIONS
             FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(queryHost, configHost, new SnapshotParser<EventsModel>() {

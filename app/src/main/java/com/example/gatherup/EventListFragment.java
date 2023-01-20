@@ -99,7 +99,7 @@ public class EventListFragment extends Fragment implements FirestoreAdapter.OnLi
     private void Paging(){
         Query query = store.collection("Events").orderBy("Date").whereGreaterThan("Date", currentTime);
 
-        PagingConfig config = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+        PagingConfig config = new PagingConfig(3);
 
         //PAGING OPTIONS
         FirestorePagingOptions<EventsModel> options = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query, config, new SnapshotParser<EventsModel>() {

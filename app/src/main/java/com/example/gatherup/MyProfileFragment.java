@@ -113,8 +113,8 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
         //RecyclerView eventosQueParticipa
         recyclerView = view.findViewById(R.id.listaEventos);
-        System.out.println("Antes");
 
+        //Query eventos que participo
         Query queryAux = store.collection("Users").document(userID).collection("Events");
 
         queryAux.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -122,19 +122,13 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        System.out.println("document.getData(): " + document.getData());
                         String eventReference = document.getId();
                         if(eventIDs.size() < 10) {
                             eventIDs.add(eventReference);
-                            System.out.println(eventReference);
                         }
                     }
-                    System.out.println(eventIDs);
                     getIds();
-                } else {
-                    Log.d("TAG", "Error getting event references: ", task.getException());
                 }
-
             }
         });
 
@@ -143,10 +137,9 @@ public class MyProfileFragment extends Fragment implements FirestoreAdapter.OnLi
 
 
         //QUERY Meus Eventos
-        System.out.println("AS QUERIES COMEÇAM AQUI!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         Query query2 = store.collection("Events").whereEqualTo("CreatorID", userID);
 
-        PagingConfig config2 = new PagingConfig(3);//MODIFICAR QUANTO NECESSÁRIO
+        PagingConfig config2 = new PagingConfig(3);
 
         //PAGING OPTIONS
         FirestorePagingOptions<EventsModel> options2 = new FirestorePagingOptions.Builder<EventsModel>().setLifecycleOwner(this).setQuery(query2, config2, new SnapshotParser<EventsModel>() {

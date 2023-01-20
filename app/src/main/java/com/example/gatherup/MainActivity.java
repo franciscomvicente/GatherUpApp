@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, 100, this);
         mCurrentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-        //Intent serviceIntent = new Intent(this, EventCheckService.class);
-        //startService(serviceIntent);
         createNotificationChannel();
     }
 
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public void onProviderEnabled(String provider) {
-        System.out.println("Liguei O GPS");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -117,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public void onProviderDisabled(String provider) {
-        System.out.println("Desliguei O GPS");
     }
 
     private void createNotificationChannel(){
@@ -146,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         java.sql.Timestamp eventTime = new java.sql.Timestamp(parsedDate.getTime());
         long alarmTime  = eventTime.getTime() - 60 * 60 * 1000;
         alarmManager.set(AlarmManager.RTC_WAKEUP,alarmTime,pendingIntent);
-        System.out.println("NOTIFICATION SET");
 
     }
 
@@ -155,7 +150,5 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,id,intent,PendingIntent.FLAG_IMMUTABLE);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        System.out.println("NOTIFICATION REMOVED");
-        System.out.println(alarmManager.getNextAlarmClock());
     }
 }

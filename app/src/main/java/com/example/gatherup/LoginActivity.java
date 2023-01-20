@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView btnRegisterPage;
     CheckBox checkRememberMe;
 
-    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"; //VERIFICAR
+    String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     ProgressDialog progressDialog;
 
     FirebaseAuth auth;
@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
 
         btnLogin.setOnClickListener(v -> {
-            //PREVENT DOUBLE CLICK
             if (SystemClock.elapsedRealtime() - btnLoginTime < 1000){
                 return;
             }
@@ -61,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnRegisterPage.setOnClickListener(v -> {
-            //PREVENT DOUBLE CLICK
             if (SystemClock.elapsedRealtime() - btnRegisterTime < 1000){
                 return;
             }
@@ -91,7 +89,6 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        //GUARDAR SESSAO INICIADA
                         if (checkRememberMe.isChecked()) {
                             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -99,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                             editor.apply();
                         }
 
-                        //EFETUAR LOGIN
                         progressDialog.dismiss();
                         AccountLogin();
                         Toast.makeText(LoginActivity.this, "Login Completed", Toast.LENGTH_SHORT).show();

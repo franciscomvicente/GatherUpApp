@@ -13,14 +13,12 @@ public class EventCheckReceiver extends BroadcastReceiver {
         String title = intent.getStringExtra("title");
         int icon = intent.getIntExtra("icon", 0);
 
-        // create notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "event_channel")
                 .setSmallIcon(icon)
                 .setContentTitle(title)
                 .setContentText("Event is starting in 1 hour")
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        // show notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(200, builder.build());
     }
