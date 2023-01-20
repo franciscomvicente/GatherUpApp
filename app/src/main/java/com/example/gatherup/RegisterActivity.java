@@ -57,7 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         store = FirebaseFirestore.getInstance();
 
-
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
