@@ -534,6 +534,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, MainAc
                 }
             }
         }
+        filteredEvents = shownevents;
         deletemarkers();
         addMapMarkers();
         FocusMe();
